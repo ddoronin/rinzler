@@ -7,13 +7,13 @@ npm install b-flow
 
 ## Proposition
 
-Web trafic and server performance are affected by the binding to JSON or XML. This text format is far from native data representation in bytes and needed to be processed (serialized/deserialized) several times for every single http call.
+Web trafic and server performance are usually affected by underlying data formats such as JSON or XML. These text formats are far from native data representation in bytes and needed to be processed (serialized/deserialized) several times for every single http call.
 
-Today browsers can handle binary data over websockets. Moreover data processing can be done very effecient because of web assembly.
+Today browsers can handle binary data over websockets. Moreover data processing in javascript can be done with near-native performance because of web assembly.
 
-`b-flow` is a try to pass binary data from a server to clients and back with minimum data transformations.
+`b-flow` is a try to pass binary data from servers to clients and back with minimum data transformations.
 
-The problem with binary format is that it can be interpreted differently depending on language. It looks like a good idea to use a language independent data interchange format similar to XML or better JSON, but for binary. The answer is Binary JSON!
+The problem with binary format is that it can be interpreted differently by different languages. It looks like a good idea to use a language independent data interchange format similar to XML or better JSON, but binary. Binary JSON!
 
 ## BSON
 
