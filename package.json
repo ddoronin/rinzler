@@ -1,0 +1,27 @@
+{
+  "name": "b-flow",
+  "version": "0.0.1",
+  "description": "Binary Data Flow Over Web Sockets",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^2.9.0"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddoronin/b-flow.git"
+  },
+  "keywords": [
+    "bson",
+    "websockets"
+  ],
+  "author": "Dima Doronin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ddoronin/b-flow/issues"
+  },
+  "homepage": "https://github.com/ddoronin/b-flow#readme"
+}
