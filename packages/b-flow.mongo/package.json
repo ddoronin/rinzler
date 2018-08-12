@@ -1,0 +1,29 @@
+{
+  "name": "b-flow",
+  "version": "1.0.0",
+  "description": "Binary Over Web Sockets",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddoronin/b-flow.git"
+  },
+  "keywords": [
+    "binary",
+    "sockets",
+    "mongo"
+  ],
+  "author": "Dima Doronin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ddoronin/b-flow/issues"
+  },
+  "homepage": "https://github.com/ddoronin/b-flow#readme",
+  "dependencies": {
+    "bson": "^3.0.2",
+    "mongodb": "^3.1.1",
+    "ws": "^6.0.0"
+  }
+}
