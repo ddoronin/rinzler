@@ -7,15 +7,13 @@ npm install b-flow
 
 ## Unique Proposition
 
-Client-server communication over BSON by websockets or HTTP/2 should reduce web trafic and optimize server performance.
+Client-server communications over BSON by websockets or HTTP/2 should reduce web trafic and optimize performance.
 
-The trafic should be lesser because of higher efficiency of bynary format vs text formats like JSON and XML (even gzip-ed).
+In contrast to traditional text formats (JSON and XML) binary is a memory snapshot and it doesn't need any additional processing on the way to clients.
 
-More over bynary is close to native/machine data representation in memory and doesn't need any additional processing. So, it should requre lesser CPU and memory for back-end.
+In terms of clients, who are mostly web browsers, binary data could be handled effeciently with Typed Arrays, Buffers and, when supported, WASM.
 
-In terms of clients, who are mostly web browsers, they can handle binary data effeciently with Typed Arrays, Buffers and, when supported, WASM.
-
-`b-flow` is a set of tools demonstrating client-server communication over web sockets using BSON.
+`b-flow` is a set of tools demonstrating two-way client-server communication over web sockets using BSON.
 
 ## BSON
 
