@@ -26,3 +26,25 @@ https://www.mongodb.com/blog/post/bson
 > BSON can be compared to binary interchange formats, such as Protocol Buffers. BSON is more “schemaless” than Protocol Buffers – this being both an advantage in flexibility, and a slight disadvantage in space as BSON has a little overhead for fieldnames within the serialized BSON data.
 
 MongoDB is a perfect example where this flow should shine, because it's already working with BSON and everything you need to grab BSON from Mongo and send it to a client browser over web sockets.
+
+## Protocol
+
+Client request:
+
+| Header | Description |
+| ------ | ----------- |
+| PAYLOAD_SIZE | UInt8 |
+| PAYLOAD | BSON of size PAYLOAD_SIZE |
+| MARKER | Client marker (e.g. requestId) that will be used to trace a response. |
+
+Server response:
+
+| Header | Description |
+| ------ | ----------- |
+| DOCUMENTS_COUNT | UInt8 |
+| DOCUMENT_INDEX | UInt8 |
+| DOCUMENT_SIZE | UInt8 |
+| DOCUMENT | BSON of size DOCUMENT_SIZE |
+| MARKER | Client marker came with the request payload (e.g. requestId). |
+| METADATA | Any additional metadata related to the document.|
+
