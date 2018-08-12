@@ -1,19 +1,21 @@
 # b-flow
-binary data flow over web sockets
+**binary data flow over web sockets**
 
 ```
 npm install b-flow
 ```
 
-## Proposition
+## Unique Proposition
 
-Web trafic and server performance are usually affected by underlying data formats such as JSON or XML. These text formats are far from native data representation in bytes and needed to be processed (serialized/deserialized) several times for every single http call.
+Client-server communication over BSON by websockets or HTTP/2 should reduce web trafic and optimize server performance.
 
-Today browsers can handle binary data over websockets. Moreover data processing in javascript can be done with near-native performance because of web assembly.
+The trafic should be lesser because of higher efficiency of bynary format vs text formats like JSON and XML (even gzip-ed).
 
-`b-flow` is a try to pass binary data from servers to clients and back with minimum data transformations.
+More over bynary is close to native/machine data representation in memory and doesn't need any additional processing. So, it should requre lesser CPU and memory for back-end.
 
-The problem with binary format is that it can be interpreted differently by different languages. It looks like a good idea to use a language independent data interchange format similar to XML or better JSON, but binary. Binary JSON!
+In terms of clients, who are mostly web browsers, they can handle binary data effeciently with Typed Arrays, Buffers and, when supported, WASM.
+
+`b-flow` is a set of tools demonstrating client-server communication over web sockets using BSON.
 
 ## BSON
 
@@ -25,11 +27,11 @@ https://www.mongodb.com/blog/post/bson
 
 > BSON can be compared to binary interchange formats, such as Protocol Buffers. BSON is more “schemaless” than Protocol Buffers – this being both an advantage in flexibility, and a slight disadvantage in space as BSON has a little overhead for fieldnames within the serialized BSON data.
 
-MongoDB is a perfect example where this flow should shine, because it's already working with BSON and everything you need to grab BSON from Mongo and send it to a client browser over web sockets.
+MongoDB is a perfect example where this flow should shine, because this db is completely relying on BSON.
 
 ## Protocol
 
-Client request:
+Client:
 
 | Header | Description |
 | ------ | ----------- |
@@ -37,7 +39,7 @@ Client request:
 | PAYLOAD | BSON of size PAYLOAD_SIZE |
 | MARKER | Client marker (e.g. requestId) that will be used to trace a response. |
 
-Server response:
+Server:
 
 | Header | Description |
 | ------ | ----------- |
@@ -48,3 +50,4 @@ Server response:
 | MARKER | Client marker came with the request payload (e.g. requestId). |
 | METADATA | Any additional metadata related to the document.|
 
+### To be continued...
