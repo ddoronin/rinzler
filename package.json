@@ -8,7 +8,9 @@
     "lerna": "^2.9.0"
   },
   "scripts": {
-    "test": "test"
+    "start": "npm run start:client & npm run start:server &",
+    "start:client": "cd ./packages/b-flow.client; npm start",
+    "start:server": "cd ./packages/b-flow.mongo; npm start"
   },
   "repository": {
     "type": "git",
