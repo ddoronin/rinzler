@@ -1,19 +1,49 @@
 # b-flow
-**binary data flow over web sockets**
+**binary data flow over web sockets and HTTP/2**
 
 ```
 npm install b-flow
 ```
 
-## Unique Proposition
+## Motivation
+Today in the World of Big Data and IoT one of the key challenges is how to store data so it could be queried effeciently in many different ways. Evolution of databases toward NoSQL helped to reduce overhead of normalization. Changes in data schema are not pain any more. To achive this, for instance, Mongo is relying on schema-less tree structure stored as binary JSON or BSON.
 
-Client-server communications over BSON by websockets or HTTP/2 should reduce web trafic and optimize performance.
+Traditionally back-end was required to parse this BSON, transform it into Java/C#/JavaScript objects in memory, than serialize in JSON and send it to a web browser over HTTP. All these layers of parsing, transformations and serializations take time and computational resources.
 
-In contrast to traditional text formats (JSON and XML) binary is a memory snapshot and it doesn't need any additional processing on the way to clients.
+With `b-flow` it's not required any more! Grab BSON and pass as is!
 
-In terms of clients, who are mostly web browsers, binary data could be handled effeciently with Typed Arrays, Buffers and, when supported, WASM.
+## Proposition
 
-`b-flow` is a set of tools demonstrating two-way client-server communication over web sockets using BSON.
+Client-server communications in BSON over websockets or HTTP/2 should reduce web trafic and optimize back-end resources usage.
+
+## Workflow
+
+```
+┌─────────┐ RQST ┌─────────┐ QUERY┌─────────┐
+│ BROWSER │ ~~~> │ SERVER  │ ~~~> │ MONGO   │
+└─────────┘ BSON └─────────┘ BSON └─────────┘
+  ^  ^  ^                           cursor
+  |  !  :                              |
+  |  !  :    STATUS 0 [OK]             |
+ WASM PARSE <-------------------- socket msg
+     !  : BINARY HEADER + BSON   BSON DOC
+     !  :                              |
+     !  :    ...  cursor.next() != Nil |
+     !  :                              |
+     !  :    STATUS 0 [OK]             |
+ WASM PARSE <-------------------- socket msg
+        :   BINARY HEADER + BSON   BSON DOC
+        :                              |
+        :    ...  cursor.next() == Nil |
+        :                              |
+        :    STATUS 2 [COMPLETED]      |
+ WASM PARSE <-------------------- socket msg
+            BINARY HEADER + BSON   BSON DOC
+```
+
+Today web browsers are able to handle binary data effeciently with Typed Arrays, Buffers and WASM.
+
+`b-flow` is demonstrating two-way client-server communication over web sockets using BSON without additional layers of translation between JSON, BSON and back-end objects.
 
 ## BSON
 
@@ -25,27 +55,30 @@ https://www.mongodb.com/blog/post/bson
 
 > BSON can be compared to binary interchange formats, such as Protocol Buffers. BSON is more “schemaless” than Protocol Buffers – this being both an advantage in flexibility, and a slight disadvantage in space as BSON has a little overhead for fieldnames within the serialized BSON data.
 
-MongoDB is a perfect example where this flow should shine, because this db is completely relying on BSON.
+## Why Mongo
+
+MongoDB is a perfect example because it's internally relying on BSON, every document is stored as BSON and can be passed throught in this raw binary format.
 
 ## Protocol
 
-Client:
+Client Query Request:
 
-| Header | Description |
-| ------ | ----------- |
-| PAYLOAD_SIZE | UInt8 |
-| PAYLOAD | BSON of size PAYLOAD_SIZE |
-| MARKER | Client marker (e.g. requestId) that will be used to trace a response. |
+| Header | Size        | Description |
+| ------ | ----------- | ----------- |
+| MARKER_SIZE | UInt8 | Size of requestId to be used to trace a response.
+| MARKER | `MARKER_SIZE` | Request Id. |
+| PAYLOAD_SIZE | UInt32 | Size of payload.
+| PAYLOAD | `PAYLOAD_SIZE` | Payload in BSON.
 
 Server:
 
-| Header | Description |
-| ------ | ----------- |
-| DOCUMENTS_COUNT | UInt8 |
-| DOCUMENT_INDEX | UInt8 |
-| DOCUMENT_SIZE | UInt8 |
-| DOCUMENT | BSON of size DOCUMENT_SIZE |
-| MARKER | Client marker came with the request payload (e.g. requestId). |
-| METADATA | Any additional metadata related to the document.|
+| Header | Size        | Description |
+| ------ | ----------- | ----------- |
+| MARKER_SIZE | UInt8 | Size of requestId. |
+| MARKER | `MARKER_SIZE` | Client requestId. |
+| STATUS | UInt8 | 0 [Ok], 1 [Error], 2 [Completed], 3 [Completed with errors] |
+| INDEX | UInt16 | Response index. |
+| BSON_SIZE | UInt8 | Size of BSON response. |
+| BSON | `RESPONSE_SIZE` | Usually document, or error if it happened with status 1 [Error]. |
 
 ### To be continued...
