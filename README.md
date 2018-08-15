@@ -89,7 +89,9 @@ Today web browsers are able to handle binary data effeciently with Typed Arrays,
 | 0     | x0000  | Ok |
 | 1     | x0001  | Error |
 | 2     | x0010  | Completed |
-| 3     | x0011  | Completed with Errors (`x0001|x0010`)|
+| 3     | x0011  | Completed with Errors |
+
+x0011 = x0001 | x0010
 
 ## Client API
 
