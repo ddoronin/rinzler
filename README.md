@@ -1,4 +1,4 @@
-# b-flow {01}
+# b-flow {1010}
 **binary data flow over web sockets and HTTP/2**
 
 ```
@@ -42,8 +42,8 @@ MongoDB is a perfect example, because internally it's relying on BSON, every doc
      !  :      STATUS [OK]                  |
      !  :      BODY   [BSON]                |
      !  :      INDEX  [0]                   |
-     !  :  ...                      ...     |
-     !  :      < N-1 times >               cursor.next() != Nil
+     !  :                                   |
+     !  :  ...    < N times >     ...  cursor.next() != Nil
      !  :                                   |
  READ BSON <---------------------------  { 1010 }
         :      STATUS [OK]                  |
@@ -89,7 +89,7 @@ Today web browsers are able to handle binary data effeciently with Typed Arrays,
 | 0     | x0000  | Ok |
 | 1     | x0001  | Error |
 | 2     | x0010  | Completed |
-| 3     | x0011  | Completed with Errors (x0001|x0010)|
+| 3     | x0011  | Completed with Errors (`x0001|x0010`)|
 
 ## Client API
 
