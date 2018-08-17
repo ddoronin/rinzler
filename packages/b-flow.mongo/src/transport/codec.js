@@ -12,21 +12,21 @@ class Codec {
     }
 }
 
-Codec.prototype.get = function(header) {
+Codec.prototype.read = function(header) {
     const msg0 = this.msg0;
-    const [_, type, size, shift] = this.bst.find(([h]) => h === header);
-    if(size > 0) {
+    const [_, __, size, shift] = this.bst.find(([h]) => h === header);
+    if (size > 0) {
         return msg0.slice(shift, shift + size);
     }
     return null;
 };
 
 Codec.prototype.readAsString = function(header) {
-    return this.get(header).toString();
+    return this.read(header).toString();
 };
 
 Codec.prototype.readAsJSON = function(header) {
-    return bson.deserialize(this.get(header));
+    return bson.deserialize(this.read(header));
 };
 
 exports.Codec = Codec;
