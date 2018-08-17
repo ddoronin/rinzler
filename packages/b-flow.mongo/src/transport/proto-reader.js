@@ -2,7 +2,7 @@
 
 const TYPES = {
     UInt8: 1,
-    UInt16BE: 6,
+    UInt16BE: 2,
     UInt32BE: 4
 }
 
