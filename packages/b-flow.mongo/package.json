@@ -23,6 +23,7 @@
   "homepage": "https://github.com/ddoronin/b-flow#readme",
   "dependencies": {
     "bson": "^3.0.2",
+    "chalk": "^2.4.1",
     "mongodb": "^3.1.1",
     "uuid": "^3.3.2",
     "ws": "^6.0.0"
