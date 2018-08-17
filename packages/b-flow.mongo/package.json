@@ -1,6 +1,6 @@
 {
   "name": "b-flow",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Binary Over Web Sockets",
   "main": "index.js",
   "scripts": {
