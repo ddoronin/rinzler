@@ -23,12 +23,12 @@ App.prototype.start = function() {
             console.log(msg0, msg0_bst);
 
             const reqCodec = new Codec(reqProtoReader, msg0);
-            console.log('requestId', chalk.green(reqCodec.readAsString('MARKER')));
+            const requestId = reqCodec.readAsString('MARKER');
+            const payload = reqCodec.readAsJSON('BODY');
+
+            console.log('requestId', chalk.green(requestId));
             console.log('payload  ', chalk.green(
-                JSON.stringify(
-                    reqCodec.readAsJSON('BODY'),
-                    '\t'
-                )
+                JSON.stringify(payload, null, '\t')
             ));
             // TODO: connect to mongo.
         });
