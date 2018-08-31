@@ -29,7 +29,8 @@
   "homepage": "https://github.com/ddoronin/b-flow#readme",
   "dependencies": {
     "reflect-metadata": "^0.1.12",
-    "typescript": "^2.8.1"
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.3"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
