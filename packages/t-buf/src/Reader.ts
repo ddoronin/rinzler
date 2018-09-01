@@ -13,28 +13,26 @@ const types = new Map<string, number>([
     ['DoubleBE',    8],
 ]);
 
-type BinaryMessage = ArrayBuffer;
 type ByteShiftTable = Array<[string, string, number, number]>;
 
-export abstract class Reader<T> {
+export abstract class Reader<T, M extends { slice(start: number, end: number): M }> {
     private readonly instance: T;
     private readonly protocolTable: ProtocolTable;
 
-    constructor(private C: {new(): T;}){
+    constructor(private C: { new(): T }){
         this.instance = new C();
         this.protocolTable = (this.instance as any)[$$getShiftTable]();
     }
 
-    private calculateByteShiftTable(msg0: BinaryMessage): ByteShiftTable{
+    private calculateByteShiftTable(msg0: M): ByteShiftTable{
         let shift: number = 0;
         let size_before:  number = 0;
         const pt = this.protocolTable;
         return pt.map(([name, type], index) => {
             let size: number = types.has(type) ? types.get(type): -1;
-            // let's find the actual size
+            // find the actual size for dynamic fields such as string or bson
             for(let i = index - 1; size === -1 && i >= 0; i--) {
-                if(pt[i][0] === type) 
-                    size = ((msg0 as any)[`read${pt[i][1]}`]()) as number;
+                if(pt[i][0] === type) size = this.readAsNumber(msg0, pt[i][1]);
             }
             shift += size_before;
             size_before = size;
@@ -42,33 +40,31 @@ export abstract class Reader<T> {
         });
     };
 
-    public read(msg0: BinaryMessage): T {
+    public read(msg0: M): T {
         const bst: ByteShiftTable = this.calculateByteShiftTable(msg0);
         const c = new this.C();
         const propType = (c as any)[$$types] || {};
         for (let propName of Object.keys(propType)){
             const [_, type, size, shift] = bst.find(([h]) => h === propName);
+            const cp = c as any;
             if (size > 0) {
                 const buf = msg0.slice(shift, shift + size);
-                if(type === 'BSON'){
-                    (c as any)[propName] = this.readAsJSON(buf as any);
-                } else if(type === 'String'){
-                    (c as any)[propName] = this.readAsString(buf as any);
-                } else {
-                    (c as any)[propName] = this.readAsNumber(buf as any);
-                }
+                cp[propName] = 
+                    type === 'BSON' ?       this.readAsJSON(buf as M):
+                    type === 'String' ?     this.readAsString(buf as M):
+                    /* Everything else */   this.readAsNumber(buf as M, type);
             }
         }
         return c;
     };
 
-    public readAsNumber(msg: ArrayBuffer, type: string): number {
-        return (msg as any)[`read${type}`]() as number;
-    }
+    // ArrayBuffer implementation
+    // return (msg as any)[`read${type}`]() as number;
+    public abstract  readAsNumber(msg: M, type: string): number;
 
-    public readAsString(msg: ArrayBuffer): string {
-        return msg.toString();
-    };
+    // ArrayBuffer implementation
+    // return msg.toString();
+    public abstract readAsString(msg: M): string;
     
-    public abstract readAsJSON<JSON>(msg: ArrayBuffer): JSON;
+    public abstract readAsJSON<JSON>(msg: M): JSON;
 }
