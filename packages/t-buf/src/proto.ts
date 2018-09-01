@@ -1,26 +1,27 @@
 export const $$getShiftTable: symbol = Symbol('getShiftTable');
 export const $$types: symbol = Symbol('types');
 
-const DYNAMIC_FIELD_TYPE = 'BSON';
+const DYNAMIC_FIELD_TYPES = ['BSON', 'String'];
 const DYNAMIC_FIELD_SIZE_TYPE = 'UInt32BE';
+const DYNAMIC_FIELD_SIZE_NAME = (ref: string) => `${ref}_SIZE`;
 
-export function proto<T extends {new(...args:any[]):{}}>(constructor: T) {
+export type ProtocolTable = Array<[string, string]>;
+
+export function proto<T extends { new (...args: any[]): {} }>(constructor: T) {
     return class extends constructor {
-        [$$getShiftTable]() {
-            const shiftTable = [];
+        [$$getShiftTable](): ProtocolTable {
+            const shiftTable: ProtocolTable = [];
             const propType = (this as any)[$$types] || {};
-            const propNames =  Object.keys(propType);
-            for(let i = 0, len = propNames.length; i < len; i++) {
-                const propName = propNames[i];
+            for (let propName of Object.keys(propType)){
                 const shift = [propName];
                 const type = propType[propName];
-                if (type !== DYNAMIC_FIELD_TYPE) shift.push(type);
+                if (!DYNAMIC_FIELD_TYPES.includes(type)) shift.push(type);
                 else {
-                    const dynamicSize = `${propName}_SIZE`;
-                    shiftTable.push([dynamicSize, DYNAMIC_FIELD_SIZE_TYPE]);
+                    const dynamicSize = DYNAMIC_FIELD_SIZE_NAME(propName);
+                    shiftTable.push([dynamicSize, DYNAMIC_FIELD_SIZE_TYPE] as any);
                     shift.push(dynamicSize);
                 }
-                shiftTable.push(shift);
+                shiftTable.push(shift as any);
             }
             return shiftTable;
         }

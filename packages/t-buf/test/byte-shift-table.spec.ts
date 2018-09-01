@@ -1,5 +1,5 @@
 import { expect, assert } from 'chai';
-import { proto, uint8, uint16, bson } from '../src';
+import { proto, uint8, uint16, uint32, bson, string } from '../src';
 import { $$getShiftTable } from '../src/proto';
 
 interface IPayload {
@@ -12,10 +12,10 @@ describe('byte shift table', () => {
 
     @proto
     class Req {
-        @uint8
+        @string
         requestId: string;
 
-        @uint16
+        @uint8
         readonly index: number;
 
         @uint16
@@ -30,8 +30,9 @@ describe('byte shift table', () => {
         req.payload = {collection: 'Hello', find: 'World!'};
         const shiftTable = (req as any)[$$getShiftTable]();
         expect(shiftTable).to.deep.eq([ 
-            [ 'requestId',      'UInt8' ],
-            [ 'index',          'UInt16BE' ],
+            [ 'requestId_SIZE', 'UInt32BE' ],
+            [ 'requestId',      'requestId_SIZE' ],
+            [ 'index',          'UInt8' ],
             [ 'count',          'UInt16BE' ],
             [ 'payload_SIZE',   'UInt32BE' ],
             [ 'payload',        'payload_SIZE' ]
