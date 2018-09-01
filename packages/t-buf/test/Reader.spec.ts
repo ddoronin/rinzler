@@ -5,7 +5,6 @@ import { Reader } from '../src/Reader';
 describe('Reader for nodejs', () => {
     class BufferReader<T> extends Reader<T, Buffer> {
         public readAsNumber(msg: Buffer, type: string): number {
-            console.log('type = ', type);
             return (msg as any)[`read${type}`]() as number;
         }
 
