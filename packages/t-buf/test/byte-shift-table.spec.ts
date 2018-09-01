@@ -31,11 +31,11 @@ describe('byte shift table', () => {
         const shiftTable = (req as any)[$$getShiftTable]();
         expect(shiftTable).to.deep.eq([ 
             [ 'requestId_SIZE', 'UInt32BE' ],
-            [ 'requestId',      'requestId_SIZE' ],
+            [ 'requestId',      'requestId_SIZE',   'String' ],
             [ 'index',          'UInt8' ],
             [ 'count',          'UInt16BE' ],
             [ 'payload_SIZE',   'UInt32BE' ],
-            [ 'payload',        'payload_SIZE' ]
+            [ 'payload',        'payload_SIZE',     'BSON' ]
         ]);
     });
 });
