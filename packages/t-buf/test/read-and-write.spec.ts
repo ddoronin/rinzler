@@ -57,9 +57,7 @@ describe('Reader for nodejs', () => {
         message.index = 42;
         message.count = 777;
         const buf = writer.write(message);
-        const m = reader.read(buf);
-        expect(m.str).to.eq('Hello, World!');
-        expect(m.index).to.eq(42);
-        expect(m.count).to.eq(777);
+        const actualMessage: TestMessage = reader.read(buf);
+        expect(actualMessage).to.deep.eq(message);
     });
 });
