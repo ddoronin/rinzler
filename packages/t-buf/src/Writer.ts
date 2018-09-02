@@ -1,11 +1,12 @@
-import { ProtocolTable, $$types, $$getShiftTable, DYNAMIC_FIELD_SIZE_TYPE } from "./proto";
+import { ProtoTable } from './ProtoTable';
+import { $$getShiftTable } from "./proto";
 import { byteMap } from './utils';
 
 type ByteShiftTable = Array<[string, number, any]>;
 
 export abstract class Writer<T, M> {
     private readonly instance: T;
-    private readonly protocolTable: ProtocolTable;
+    private readonly protocolTable: ProtoTable;
 
     constructor(private C: { new(): T }){
         this.instance = new C();
