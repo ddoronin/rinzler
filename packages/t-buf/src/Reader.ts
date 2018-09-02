@@ -1,11 +1,13 @@
-import { ProtocolTable, $$types, $$getShiftTable, DYNAMIC_FIELD_SIZE_TYPE } from "./proto";
+import { ProtoTable } from './ProtoTable';
+import { DYNAMIC_SIZE_TYPE } from './proto-table-builder';
+import { $$types, $$getShiftTable } from './proto';
 import { byteMap } from './utils';
 
 type ByteShiftTable = Array<[string, string, number, number, string?]>;
 
 export abstract class Reader<T, M extends { slice(start: number, end: number): M }> {
     private readonly instance: T;
-    private readonly protocolTable: ProtocolTable;
+    private readonly protocolTable: ProtoTable;
 
     constructor(private C: { new(): T }){
         this.instance = new C();
@@ -21,7 +23,7 @@ export abstract class Reader<T, M extends { slice(start: number, end: number): M
             // find the actual size for dynamic fields such as string or bson
             for(let i = index - 1; size === -1 && i >= 0; i--) {
                 if(pt[i][0] === type) {
-                    size = this.readAsNumber(msg0, DYNAMIC_FIELD_SIZE_TYPE);
+                    size = this.readAsNumber(msg0, DYNAMIC_SIZE_TYPE);
                 }
             }
             shift += size_before;
@@ -33,8 +35,8 @@ export abstract class Reader<T, M extends { slice(start: number, end: number): M
     public read(msg0: M): T {
         const bst: ByteShiftTable = this.calculateByteShiftTable(msg0);
         const c = new this.C();
-        const propType = (c as any)[$$types] || {};
-        for (let propName of Object.keys(propType)){
+        const propType = (c as any)[$$types] as Map<string, string>;
+        for (let propName of propType.keys()){
             const [_, type, size, shift, originalType] = bst.find(([h]) => h === propName);
             const cp = c as any;
             if (size > 0) {

@@ -3,7 +3,7 @@ import { proto, uint8, uint16, uint32, bson, string } from '../src';
 import { Reader } from '../src/Reader';
 import { Writer } from '../src/Writer';
 
-describe('Reader for nodejs', () => {
+describe('Reade and Write for nodejs', () => {
     class BufferReader<T> extends Reader<T, Buffer> {
         public readAsNumber(msg: Buffer, type: string): number {
             return (msg as any)[`read${type}`]() as number;

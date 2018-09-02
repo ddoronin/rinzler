@@ -1,8 +1,14 @@
 import { $$types } from './proto';
 
-const _ = (t: string) => (o: any, propertyKey: string | symbol): void => {
-    o[$$types] = o[$$types] || {};
-    o[$$types][propertyKey] = t;
+function isInitialize(map: any): map is Map<string, string> {
+    return typeof map !== 'undefined';
+}
+
+const _ = (type: string) => (o: any, fieldName: string | symbol): void => {
+    if(!isInitialize(o[$$types])) {
+        o[$$types] = new Map<string, string>();
+    }
+    o[$$types].set(fieldName, type);
 }
 
 // Integer
