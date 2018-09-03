@@ -3,9 +3,8 @@
   "version": "0.0.1",
   "description": "Binary Data Flow Over Web Sockets",
   "main": "index.js",
-  "dependencies": {},
   "devDependencies": {
-    "lerna": "^2.9.0"
+    "lerna": "^3.1.0"
   },
   "scripts": {
     "start": "npm run start:client & npm run start:server &",
