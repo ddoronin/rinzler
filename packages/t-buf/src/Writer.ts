@@ -1,8 +1,6 @@
 import { ProtoTable } from './ProtoTable';
 import { $$getShiftTable } from "./proto";
-import { byteMap } from './utils';
-
-type ByteShiftTable = Array<[string, number, any]>;
+import { byteMap } from './types';
 
 export abstract class Writer<T, M> {
     private readonly instance: T;
@@ -20,9 +18,9 @@ export abstract class Writer<T, M> {
         while (n --> 0) {
             if(table[n].length !== 0) continue;
 
-            const [ fieldName, type, dynamicType ] = this.protocolTable[n];
-            if (dynamicType) {
-                const binary = this.dynamicToBinary(dynamicType, o[fieldName]) as { byteLength: number };
+            const [ fieldName, type, dynamic ] = this.protocolTable[n];
+            if (dynamic) {
+                const binary = this.dynamicToBinary(dynamic, o[fieldName]) as { byteLength: number };
                 const byteLength = binary.byteLength
                 table[n] = [
                     'binary', 

@@ -2,6 +2,8 @@ import { expect } from 'chai';
 import { build } from '../src/proto-table-builder';
 
 describe('proto-table-builder', () => {
+    // TODO: cover validations!
+
     it('should handle static types', () => {
         const typedFields = new Map([
             ['a', 'UInt8'],

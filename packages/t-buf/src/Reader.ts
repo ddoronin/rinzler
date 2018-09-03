@@ -1,49 +1,74 @@
-import { ProtoTable } from './ProtoTable';
-import { DYNAMIC_SIZE_TYPE } from './proto-table-builder';
+import { ProtoTable, ByteShiftProtoTable } from './ProtoTable';
+import { byteMap, DYNAMIC_SIZE_TYPE } from './types';
 import { $$types, $$getShiftTable } from './proto';
-import { byteMap } from './utils';
 
-type ByteShiftTable = Array<[string, string, number, number, string?]>;
+const SIZE_UNKNOWN = -1;
+
+/**
+ * Computes byte shift protocol table for static and dynamic types.
+ * For dynamic types it reads size from a supplementary UInt32BE field.
+ * @param { BinaryMessage } msg0 - binary message.
+ * @param { ProtoTable } protoTable - protocol table.
+ * @param readAsNumber - binary reader.
+ * @param slice - binary slicer.
+ */
+export function buildByteShiftProtoTable<BinaryMessage>(
+    msg0: BinaryMessage,
+    protoTable: ProtoTable,
+    readAsNumber: (m: BinaryMessage, type: string, size: number) => number,
+    slice: (m: BinaryMessage, start: number, end: number) => BinaryMessage
+): ByteShiftProtoTable {
+    let shift: number = 0;
+    let size_before:  number = 0;
+    let byteShift: ByteShiftProtoTable = [];
+    for (let [index, [name, type, origin]] of protoTable.entries()) {
+        const isStatic = byteMap.has(type);
+        let size: number = isStatic ? byteMap.get(type): SIZE_UNKNOWN;
+        /**
+         * Example of dynamic:
+         * [...
+         *  [ 'requestId_SIZE', 'UInt32BE' ],
+         *  [ 'requestId',      'requestId_SIZE',   'String' ],
+         * ...]
+         */
+        for(let i = index - 1; size === SIZE_UNKNOWN && i >= 0; i--) {
+            if(protoTable[i][0] === type) {
+                const msg_shift = byteShift[i][3];
+                const msg_size  = byteShift[i][2];
+                const msg_type  = byteShift[i][1];
+                const msg_slice = slice(msg0, msg_shift, msg_shift + msg_size);
+                size = readAsNumber(msg_slice, msg_type, msg_size);
+            }
+        }
+        shift += size_before;
+        size_before = size;
+        if (origin) byteShift.push([name, origin, size, shift]);
+        else        byteShift.push([name, type,   size, shift]);
+    }
+    return byteShift;
+}
 
 export abstract class Reader<T, M extends { slice(start: number, end: number): M }> {
     private readonly instance: T;
     private readonly protocolTable: ProtoTable;
 
-    constructor(private C: { new(): T }){
+    constructor(private C: { new(): T }) {
         this.instance = new C();
         this.protocolTable = (this.instance as any)[$$getShiftTable]();
     }
 
-    private calculateByteShiftTable(msg0: M): ByteShiftTable{
-        let shift: number = 0;
-        let size_before:  number = 0;
-        const pt = this.protocolTable;
-        return pt.map(([name, type, originalType], index) => {
-            let size: number = byteMap.has(type) ? byteMap.get(type): -1;
-            // find the actual size for dynamic fields such as string or bson
-            for(let i = index - 1; size === -1 && i >= 0; i--) {
-                if(pt[i][0] === type) {
-                    size = this.readAsNumber(msg0, DYNAMIC_SIZE_TYPE);
-                }
-            }
-            shift += size_before;
-            size_before = size;
-            return [name, type, size, shift, originalType] as any;
-        });
-    };
-
     public read(msg0: M): T {
-        const bst: ByteShiftTable = this.calculateByteShiftTable(msg0);
+        const bst = buildByteShiftProtoTable(msg0, this.protocolTable, this.readAsNumber as any, (_, s, e) => msg0.slice(s,e));
         const c = new this.C();
         const propType = (c as any)[$$types] as Map<string, string>;
         for (let propName of propType.keys()){
-            const [_, type, size, shift, originalType] = bst.find(([h]) => h === propName);
+            const [_, type, size, shift] = bst.find(([h]) => h === propName);
             const cp = c as any;
             if (size > 0) {
                 const buf = msg0.slice(shift, shift + size);
                 cp[propName] = 
-                    originalType === 'BSON' ?       this.readAsJSON(buf as M):
-                    originalType === 'String' ?     this.readAsString(buf as M):
+                    type === 'BSON' ?       this.readAsJSON(buf as M):
+                    type === 'String' ?     this.readAsString(buf as M):
                     /* Everything else */   this.readAsNumber(buf as M, type);
             }
         }

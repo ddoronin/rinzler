@@ -11,6 +11,8 @@ const _ = (type: string) => (o: any, fieldName: string | symbol): void => {
     o[$$types].set(fieldName, type);
 }
 
+export const DYNAMIC_SIZE_TYPE = 'UInt32BE';
+
 // Integer
 export const uint8  = _('UInt8');
 export const uint16 = _('UInt16BE');
@@ -33,33 +35,15 @@ export const bson = _('BSON');
 // String
 export const string = _('String');
 
-// alias
-export const u8     = uint8;
-export const ubyte  = uint8;
+export const byteMap = new Map<string, number>([
+    ['UInt8',       1],
+    ['UInt16BE',    2],
+    ['UInt32BE',    4],
 
-export const u16    = uint16;
-export const ushort = uint16;
+    ['Int8',        1],
+    ['Int16BE',     2],
+    ['Int32BE',     4],
 
-export const u32    = uint32;
-export const uint   = uint32;
-
-export const i8     = int8;
-export const byte   = int8;
-
-export const i16    = int16;
-export const short  = int16;
-
-export const i32    = int32;
-export const int    = int32;
-
-export const f      = float;
-export const d      = double;
-export const number = double;
-
-export const bool   = boolean;
-
-export const s      = string;
-export const str    = string;
-
-export const o      = bson;
-export const object = bson;
+    ['FloatBE',     4],
+    ['DoubleBE',    8],
+]);
