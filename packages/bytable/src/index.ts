@@ -5,6 +5,9 @@ export {
     float, double,
     boolean,
     bson,
-    string
+    string,
+    byteMap
 } from './types';
 export * from './type-aliases';
+export { Reader } from './Reader';
+export { Writer } from './Writer';
