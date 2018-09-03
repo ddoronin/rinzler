@@ -18,7 +18,7 @@
   "dependencies": {
     "bson": "^3.0.2",
     "buffer": "^5.2.0",
-    "t-buf": "^0.0.1",
+    "bytable": "^0.0.1",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.3"
   }
