@@ -1,28 +1,35 @@
 import { ProtoTable } from './ProtoTable';
-import { byteMap } from './utils';
+import { byteMap, DYNAMIC_SIZE_TYPE } from './types';
 
 export type FieldName = string;
 export type FieldType = string;
 export type TypedFieldsMap = Map<FieldName, FieldType>;
 
 /**
- * Static Types - 
- * types with fixed memory space, e.g. 
+ * Static Types
+ * - types with fixed memory space, e.g. 
  * UInt8, Int8, UInt16, etc.
  */
 const staticTypes = new Set(byteMap.keys());
 
 /**
- * Dynamic Types - 
- * should be prefixed with UInt32BE describing the memory space requirements.
+ * Dynamic Types
+ * - should be prefixed with UInt32BE describing the memory space requirements.
  * Example of dynamic types: String, BSON.
  */
 const getDynamicSizeField = (fieldName: string) => `${fieldName}_SIZE`;
-export const DYNAMIC_SIZE_TYPE = 'UInt32BE';
 
-const validateInput = (typedFields: TypedFieldsMap) => {
-    if(!typedFields || typedFields.size === 0) {
-        throw new Error('No fields to map found. Please use decorators to mark the fields.');
+const validate = (typedFields: TypedFieldsMap) => {
+    if (typedFields === null || typeof typedFields === 'undefined') {
+        throw new Error('Typed fields cannot be null or undefined.');
+    }
+
+    if(typeof typedFields.size === undefined) {
+        throw new TypeError('Initialization error. The typed fields should be an instance of Map<string, string>');
+    }
+
+    if(typedFields.size === 0) {
+        throw new RangeError('No fields to map found. Please use decorators @proto, @uint8, @string, @object, etc.');
     }
 };
 
@@ -31,11 +38,10 @@ const validateInput = (typedFields: TypedFieldsMap) => {
  * @param { TypedFieldsMap } typedFields - mapping between feilds and their types.
  */
 export function build(typedFields: TypedFieldsMap): ProtoTable {
-    validateInput(typedFields);
+    validate(typedFields);
 
     const protoTable: ProtoTable = [];
-    for (let field of typedFields.keys()){
-        const type = typedFields.get(field);
+    for (let [field, type] of typedFields.entries()) {
         if (staticTypes.has(type)) protoTable.push([field, type]);
         else {
             const dsField = getDynamicSizeField(field);
