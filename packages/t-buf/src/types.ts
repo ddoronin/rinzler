@@ -54,3 +54,10 @@ export const byteMap = new Map<string, number>([
     ['FloatBE',     4],
     ['DoubleBE',    8],
 ]);
+
+/**
+ * Static Types
+ * - types with fixed memory space, e.g. 
+ * UInt8, Int8, UInt16, etc.
+ */
+export const staticTypes = new Set(byteMap.keys());

@@ -8,8 +8,7 @@ interface IPayload {
     readonly projection?: {};
 }
 
-describe('byte shift table', () => {
-
+describe('decorators-to-proto-table', () => {
     @proto
     class Req {
         @string

@@ -47,6 +47,12 @@ export function fromBinary<BinaryMessage>(
     return byteShift;
 }
 
+/**
+ * Computes byte table for JavaScript object.
+ * @param { Object } obj - target object to be binarified.
+ * @param { ProtoTable } protoTable - protocol table.
+ * @param { Function } dynamicToBinary - function to convert and calculate dynamic's binary size.
+ */
 export function toBinary(
     obj: any,
     protoTable: ProtoTable,

@@ -1,16 +1,9 @@
 import { ProtoTable } from './ProtoTable';
-import { byteMap, DYNAMIC_SIZE_TYPE } from './types';
+import { DYNAMIC_SIZE_TYPE, staticTypes } from './types';
 
 export type FieldName = string;
 export type FieldType = string;
 export type TypedFieldsMap = Map<FieldName, FieldType>;
-
-/**
- * Static Types
- * - types with fixed memory space, e.g. 
- * UInt8, Int8, UInt16, etc.
- */
-const staticTypes = new Set(byteMap.keys());
 
 /**
  * Dynamic Types
