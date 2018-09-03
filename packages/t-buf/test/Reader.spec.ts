@@ -2,6 +2,7 @@ import { expect, assert } from 'chai';
 import { proto, uint8, uint16, uint32, bson, string, u16 } from '../src';
 import { Reader, buildByteShiftProtoTable } from '../src/Reader';
 import { ProtoTable } from '../src/ProtoTable';
+import { byteMap } from '../src/types'
 
 describe('Reader', () => {
     const str = (s: string): Buffer => Buffer.from(s);
@@ -131,16 +132,11 @@ describe('Reader', () => {
 
     describe('Reader for nodejs', () => {
         class BufferReader<T> extends Reader<T, Buffer> {
-            public readAsNumber(msg: Buffer, type: string): number {
-                return (msg as any)[`read${type}`]() as number;
-            }
-    
-            public readAsString(msg: Buffer): string {
-                return msg.toString();
-            }
-            
-            public readAsJSON<JSON>(msg: Buffer): JSON {
-                return {} as JSON;
+            readAs<TT>(msg: Buffer, type: string): TT {
+                if(byteMap.has(type)) {
+                    return (msg as any)[`read${type}`]() as any;
+                }
+                return msg.toString() as any;
             }
         }
     

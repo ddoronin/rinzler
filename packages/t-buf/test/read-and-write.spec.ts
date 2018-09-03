@@ -2,19 +2,15 @@ import { expect, assert } from 'chai';
 import { proto, uint8, uint16, uint32, bson, string } from '../src';
 import { Reader } from '../src/Reader';
 import { Writer } from '../src/Writer';
+import { byteMap } from '../src/types';
 
 describe('Reade and Write for nodejs', () => {
     class BufferReader<T> extends Reader<T, Buffer> {
-        public readAsNumber(msg: Buffer, type: string): number {
-            return (msg as any)[`read${type}`]() as number;
-        }
-
-        public readAsString(msg: Buffer): string {
-            return msg.toString();
-        }
-        
-        public readAsJSON<JSON>(msg: Buffer): JSON {
-            return {} as JSON;
+        readAs<TT>(msg: Buffer, type: string): TT {
+            if(byteMap.has(type)) {
+                return (msg as any)[`read${type}`]() as any;
+            }
+            return msg.toString() as any;
         }
     }
 

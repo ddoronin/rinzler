@@ -58,24 +58,19 @@ export abstract class Reader<T, M extends { slice(start: number, end: number): M
     }
 
     public read(msg0: M): T {
-        const bst = buildByteShiftProtoTable(msg0, this.protocolTable, this.readAsNumber as any, (_, s, e) => msg0.slice(s,e));
+        const bspt = buildByteShiftProtoTable(msg0, this.protocolTable, this.readAs as any, (_, s, e) => msg0.slice(s,e));
         const c = new this.C();
         const propType = (c as any)[$$types] as Map<string, string>;
         for (let propName of propType.keys()){
-            const [_, type, size, shift] = bst.find(([h]) => h === propName);
+            const [_, type, size, shift] = bspt.find(([h]) => h === propName);
             const cp = c as any;
             if (size > 0) {
                 const buf = msg0.slice(shift, shift + size);
-                cp[propName] = 
-                    type === 'BSON' ?       this.readAsJSON(buf as M):
-                    type === 'String' ?     this.readAsString(buf as M):
-                    /* Everything else */   this.readAsNumber(buf as M, type);
+                cp[propName] = this.readAs(buf as M, type);
             }
         }
         return c;
     };
 
-    public abstract readAsNumber(msg: M, type: string): number;
-    public abstract readAsString(msg: M): string;
-    public abstract readAsJSON<JSON>(msg: M): JSON;
+    protected abstract readAs<T>(msg: M, type: string): T;
 }
