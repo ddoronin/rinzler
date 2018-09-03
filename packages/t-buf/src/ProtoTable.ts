@@ -15,16 +15,16 @@
  *  [ 'payload_SIZE',   'UInt32BE' ],                   // dynamic type
  *  [ 'payload',        'payload_SIZE',     'BSON' ]]   // of size requestId_SIZE
  * 
- * Based on the table above and object instance one can calculate byte shifts:
- * +------------------+-------------------+------------+------------+------------+
- * |  FIELD           | TYPE              | SIZE       | SHIFT      | ORIGIN     |
- * +------------------+-------------------+------------+------------+------------+
- * [[ 'requestId_SIZE', 'UInt32BE',         4,           0 ],
- *  [ 'requestId',      'requestId_SIZE',   123,         4,           String ], 
+ * Based on the table above and object instance byte shifts can be computed:
+ * +------------------+-------------------+------------+------------+
+ * |  FIELD           | TYPE              | SIZE       | SHIFT      |
+ * +------------------+-------------------+------------+------------+
+ * [[ 'requestId_SIZE', 'UInt32BE',         4,           0   ],
+ *  [ 'requestId',      'String',           123,         4   ], 
  *  [ 'index',          'UInt8',            1,           127 ],
  *  [ 'count',          'UInt16BE',         2,           128 ],
  *  [ 'payload_SIZE',   'UInt32BE',         4,           130 ],
- *  [ 'payload',        'payload_SIZE',     42,          134,         'BSON' ]]
+ *  [ 'payload',        'BSON',             42,          134 ]]
  */
 
  /**
