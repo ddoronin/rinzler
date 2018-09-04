@@ -1,14 +1,14 @@
 'use strict';
 
-const chalk                         = require('chalk');
-const { Server: WebSocketServer }   = require('ws');
+import chalk from 'chalk';
+import { Server } from 'ws';
 
-function startWss(config) {
+export function startWss(config: {port: number}): Promise<Server> {
     console.info(chalk.yellow('Starting Web Socket Server'));
     return new Promise((resolve, reject) => {
         console.info(`Running WSS on ${config.port}`);
         try {
-            const wss = new WebSocketServer({ port: config.port });
+            const wss = new Server({ port: config.port });
             console.log('WSS is listening on', config.port);
             resolve(wss);
         } catch(error) {
@@ -16,5 +16,3 @@ function startWss(config) {
         }
     });
 }
-
-exports.startWss = startWss;

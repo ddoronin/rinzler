@@ -1,9 +1,9 @@
 'use strict';
 
-const chalk             = require('chalk');
-const { MongoClient }   = require('mongodb');
+import chalk from 'chalk';
+import { MongoClient } from 'mongodb';
 
-function startMongo(config) {
+export function startMongo(config: {url: string}): Promise<MongoClient> {
     console.info(chalk.yellow('Starting Mongo'));
     return new Promise((resolve, reject) => {
         console.info(`Connecting to mongo: "${config.url}"`);
@@ -11,7 +11,7 @@ function startMongo(config) {
         client.connect((err, client) => {
             if(err) {
                 console.error('Error while connecting to mongo', err);
-                reject(error);
+                reject(err);
                 return process.exit(1);
             }
             console.info('Connection to mongo succeeded');
@@ -19,5 +19,3 @@ function startMongo(config) {
         });
     });
 }
-
-exports.startMongo = startMongo;

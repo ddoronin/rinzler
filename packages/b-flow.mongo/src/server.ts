@@ -1,9 +1,9 @@
 'use strict';
 
-const { mongo, server } = require('./config');
-const { startMongo }    = require('./start/mongo');
-const { startWss }      = require('./start/wss');
-const { App }           = require('./app');
+import { mongo, server } from './config';
+import { startMongo }    from './start/mongo';
+import { startWss }      from './start/wss';
+import { App }           from './app';
 
 async function run() {
     try {
