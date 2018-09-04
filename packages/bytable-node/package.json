@@ -31,8 +31,10 @@
   "dependencies": {
     "@types/bson": "^1.0.11",
     "bson": "^3.0.2",
-    "bytable": "^0.0.1",
     "typescript": "^3.0.3"
+  },
+  "peerDependencies": {
+    "bytable": "^0.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",

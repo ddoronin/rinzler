@@ -19,6 +19,7 @@
     "bson": "^3.0.2",
     "buffer": "^5.2.0",
     "bytable": "^0.0.1",
+    "bytable-node": "^0.0.1",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.3"
   }

@@ -23,17 +23,27 @@ export class App {
         private wss: Server) {
     }
 
+    handleConnection() {
+        console.log(chalk.cyanBright('(+1) connection'));
+    }
+
+    handleMessage = (msg0: any, ws: WebSocket) => {
+        const req = this.requestCodec.read(msg0);
+        console.log('payload  ', chalk.green(
+            JSON.stringify(req, null, '\t')
+        ));
+
+        // echo
+        console.log(msg0);
+        ws.send(this.requestCodec.write(req));
+    }
+
     start() {
-        const { requestCodec } = this;
         console.info(chalk.yellow('Starting App'));
-        this.wss.on('connection', function(ws) {
-            console.log(chalk.cyanBright('(+1) connection'));
-            ws.on('message', function (msg0) {
-                const req = requestCodec.read(msg0 as any);
-                console.log('payload  ', chalk.green(
-                    JSON.stringify(req, null, '\t')
-                ));
-                // TODO: connect to mongo.
+        this.wss.on('connection', (ws) => {
+            this.handleConnection();
+            ws.on('message', (msg0) => {
+                this.handleMessage(msg0, ws as any);
             });
         });
     }
