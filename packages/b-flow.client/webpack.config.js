@@ -1,8 +1,9 @@
 const package = require('./package.json');
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: './src/index.tsx',
   devtool: 'inline-source-map',
   mode: 'development',
   output: {
@@ -16,5 +17,12 @@ module.exports = {
     rules: [
       { test: /\.tsx?$/, loader: 'ts-loader' }
     ]
-  }
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: package.title,
+      hash: true,
+      template: path.resolve(__dirname, './src/index.html')
+    })
+  ],
 };

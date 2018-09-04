@@ -3,13 +3,20 @@
         "sourceMap": true,
         "noImplicitAny": true,
         "removeComments": false,
-        "alwaysStrict": true,
         "module": "commonjs",
         "target": "es6",
+        "esModuleInterop": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": false,
+        "allowSyntheticDefaultImports": true,
+        "alwaysStrict": true,
+        "jsx": "react",
         "lib": [
             "dom",
+            "dom.iterable",
+            "scripthost",
+            "esnext",
+            "esnext.array",
+            "esnext.asynciterable",
             "es7",
             "es6",
             "es2015.symbol",
@@ -17,8 +24,7 @@
         ]
     },
     "include": [
-        "src/**/*.ts",
-        "test/**/*.ts"
+        "./src/**/*"
     ],
     "exclude": [
         "node_modules",
