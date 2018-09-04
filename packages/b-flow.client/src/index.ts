@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer';
 import { Codec, proto, str, bson } from 'bytable-node';
+import { DataViewReader } from 'bytable-client/src/DataViewReader';
 
 @proto
 class Request {
@@ -11,6 +12,7 @@ class Request {
 }
 
 const requestCodec = new Codec(Request);
+const reader = new DataViewReader(Request);
 
 const ws = new WebSocket('ws://localhost:8080/');
 ws.binaryType = 'arraybuffer';
@@ -25,9 +27,7 @@ ws.onopen = function () {
     ws.send(requestCodec.write(msg));
     ws.onmessage = ({data}) => {
         if(data instanceof ArrayBuffer){
-            const buffer = Buffer.from(data);
-            console.log(buffer);
-            console.debug(requestCodec.read(buffer as any));
+            console.debug(reader.read(data));
         }
     };
 }
