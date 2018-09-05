@@ -4,6 +4,7 @@ import {
     float, double,
     boolean,
     bson,
+    binary,
     string
 } from './types';
 
@@ -36,3 +37,5 @@ export const str    = string;
 
 export const o      = bson;
 export const object = bson;
+
+export const b      = binary;

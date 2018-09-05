@@ -56,7 +56,7 @@ export function fromBinary<BinaryMessage>(
 export function toBinary(
     obj: any,
     protoTable: ProtoTable,
-    dynamicToBinary: (type: string, val: any) => { byteLength: number }
+    dynamicToBinary: (type: string, val: any) => { byteLength: number, length: number }
 ) {
     let n = protoTable.length;
     let table = new Array(n).fill([]);
@@ -71,7 +71,7 @@ export function toBinary(
         const [ fieldName, type, dynamic ] = protoTable[n];
         if (dynamic) {
             const binary = dynamicToBinary(dynamic, obj[fieldName]);
-            const dynamicSize = binary.byteLength
+            const dynamicSize = type !== 'Binary' ? binary.byteLength: binary.length;
             table[n] = [ BINARY, dynamicSize, binary ];
 
             // Find companion field and write binary size.

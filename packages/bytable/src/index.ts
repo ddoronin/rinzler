@@ -6,7 +6,8 @@ export {
     boolean,
     bson,
     string,
-    byteMap
+    byteMap,
+    binary
 } from './types';
 export * from './type-aliases';
 export { Reader } from './Reader';

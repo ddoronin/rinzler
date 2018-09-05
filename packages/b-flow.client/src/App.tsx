@@ -1,47 +1,8 @@
 import React, { Component } from 'react';
 import Terminal from 'terminal-in-react';
-import { Codec, proto, str, bson } from 'bytable-node';
-import { DataViewReader } from 'bytable-client/lib/DataViewReader';
+import { MongoTerminalPlugin } from './MongoTerminalPlugin';
 
-@proto
-class Request {
-    @str
-    id: string;
-
-    @bson
-    payload: {};
-}
-
-const requestCodec = new Codec(Request);
-const reader = new DataViewReader(Request);
-
-export class App extends Component {
-    private ws: WebSocket;
-
-    componentDidMount(){
-        const ws = new WebSocket('ws://localhost:8080/');
-        ws.binaryType = 'arraybuffer';
-        ws.onopen = () => {
-            this.ws = ws;
-        }
-    }
-
-    select = (args, print) => {
-        const msg = new Request();
-        msg.id = 'guid123';
-        msg.payload = { args };
-        const b = requestCodec.write(msg);
-        print(`sending ${b.byteLength} bytes...`);
-        this.ws.send(b);
-        this.ws.onmessage = ({data}) => {
-            if(data instanceof ArrayBuffer){
-                print(`receving ${data.byteLength} bytes...`);
-                print(JSON.stringify(reader.read(data)));
-            }
-        };
-        return false;
-    }
-  
+export class App extends Component {  
     render() {
       return (
         <div
@@ -57,21 +18,35 @@ export class App extends Component {
             showActions={false}
             hideTopBar={true}
             allowTabs={false}
-            color='rgb(5, 255, 39)'
+            color='rgb(5, 244, 255)'
             prompt='rgb(5, 255, 39)'
             promptSymbol='>'
             backgroundColor='black'
             barColor='black'
             style={{ fontWeight: "bold", fontSize: "1em" }}
-            commands={{
-              select: this.select
-            }}
+            plugins={[
+                MongoTerminalPlugin
+            ]}
             descriptions={{
               color: false, 
               show: false, 
-              clear: false,
+              clear: true,
               select: 'select [fields] from {collection} [where {find}]'
             }}
+            shortcuts={{
+                'win,linux': {
+                  'ctrl + l': 'clear',
+                },
+                'win': {
+                  'ctrl + l': 'clear',
+                },
+                'darwin': {
+                  'ctrl + l': 'clear'
+                },
+                'linux': {
+                  'ctrl + l': 'clear'
+                }
+              }}
             msg='Rinzler :: Mongo Terminal'
             watchConsoleLogging={false}
             commandPassThrough={cmd => `-rzr:${cmd}: command not found`}

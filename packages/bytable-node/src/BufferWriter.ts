@@ -9,6 +9,9 @@ export class BufferWriter<T> extends Writer<T, Buffer> {
     }
 
     protected dynamicToBinary(type: string, value: any): any {
+        if(type === 'Binary' ) {
+            return value;
+        }
         if(type === 'BSON') {
             return bson.serialize(value);
         }

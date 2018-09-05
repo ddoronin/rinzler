@@ -36,6 +36,9 @@ export const bson    = at('BSON');
 // String
 export const string  = at('String');
 
+// Binary
+export const binary  = at('Binary');
+
 /**
  * Map of known types and sizes in bytes.
  */
