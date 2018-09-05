@@ -19,6 +19,9 @@ class Request {
 
     @bson
     find: {};
+
+    @bson
+    options: {};
 }
 
 @proto
@@ -46,26 +49,22 @@ export class App {
     handleMessage = (msg0: any, ws: WebSocket) => {
         const self = this;
         const req = this.requestCodec.read(msg0);
-        console.log('payload  ', chalk.green(
+        console.log(chalk.green(
             JSON.stringify(req, null, '\t')
         ));
-
         const db = this.mongoClient.db(req.db);
         const collection = db.collection(req.collection);
-        const readable = collection.find(req.find);
+        const readable = collection.find(req.find, req.options);
         readable.on('readable', function() {
             const cursor = this;
             let chunk;
             while (null !== (chunk = cursor.read())) {
                 const resp = new Response();
                 resp.id = req.id;
-                console.log(chunk);
                 resp.data = chunk;
                 const b = self.responseCodec.write(resp);
-                console.log(b);
+                console.log(chalk.green(`> sending ${b.byteLength} bytes`));
                 (ws as any).send(b, { binary: true });
-                //ws.send(`Sending ${chunk.length} bytes of data.`);
-                //ws.send(chunk, { binary: true });
             }
         });
     }

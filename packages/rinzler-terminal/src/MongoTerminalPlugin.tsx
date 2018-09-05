@@ -16,6 +16,9 @@ class Request {
 
     @bson
     find: {};
+
+    @bson
+    options: {};
 }
 
 @proto
@@ -45,12 +48,13 @@ export class MongoTerminalPlugin extends PluginBase {
         return ' ';
     }
 
-    createRequest = (id, db, collection, find) => {
+    createRequest = (id, db, collection, find, options) => {
         const msg = new Request();
         msg.id = id;
         msg.db = db;
         msg.collection = collection;
         msg.find = find;
+        msg.options = options;
         const b = requestCodec.write(msg);
         this.api.printLine(`sending ${b.byteLength} bytes...`);
         this.ws.send(b);
@@ -114,7 +118,7 @@ export class MongoTerminalPlugin extends PluginBase {
             if (args._.length > 0) {
                 const f = JSON.parse(args._.join(''));
                 print(JSON.stringify(f));
-                this.createRequest('123', this.database, this.collection, f);
+                this.createRequest('123', this.database, this.collection, f, { limit: 10 });
             }
         },
     });
