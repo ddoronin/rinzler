@@ -1,5 +1,5 @@
 {
-  "name": "b-flow.client",
+  "name": "rinzler-terminal",
   "version": "0.0.1",
   "description": "JS Client for Binary Over Web Sockets",
   "main": "index.js",
