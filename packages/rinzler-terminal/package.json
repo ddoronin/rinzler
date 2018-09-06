@@ -39,7 +39,6 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "terminal-in-react": "^4.3.0",
-    "ts-node": "^7.0.1",
     "typescript": "^3.0.3"
   }
 }
