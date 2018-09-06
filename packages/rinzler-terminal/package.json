@@ -4,7 +4,9 @@
   "description": "JS Client for Binary Over Web Sockets",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.config.js --content-base ./www --hot --inline --colors --port 3000 --open"
+    "start": "webpack-dev-server --config webpack.config.js --content-base ./www --hot --inline --colors --port 3000 --open",
+    "test": "./node_modules/.bin/mocha --require ts-node/register ./test/**/*.spec.ts",
+    "test:watch": "npm run test -- --reporter nyan -w --watch-extensions ts"
   },
   "author": "Dima Doronin",
   "license": "MIT",
@@ -13,7 +15,18 @@
     "typescript": "^2.8.1",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.5"
+    "webpack-dev-server": "^3.1.5",
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/sinon": "^5.0.2",
+    "@types/node": "^10.9.4",
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1",
+    "sinon": "^6.1.5",
+    "source-map-support": "^0.5.9",
+    "ts-node": "^7.0.1"
   },
   "dependencies": {
     "@types/react-dom": "^16.0.7",
