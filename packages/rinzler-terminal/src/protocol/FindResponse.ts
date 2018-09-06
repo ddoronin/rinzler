@@ -1,8 +1,9 @@
 import { Codec, proto, str, bson } from 'bytable-node';
 import { DataViewReader } from 'bytable-client/lib/DataViewReader';
+import { Response } from './Response';
 
 @proto
-export class FindResponse {
+export class FindResponse extends Response {
     @str
     id: string;
 

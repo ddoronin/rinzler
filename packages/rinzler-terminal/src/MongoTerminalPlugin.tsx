@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { PluginBase } from 'terminal-in-react';
-import { createFindRequest } from './terminal/executor';
+import { createFindRequest, handleFindResponse } from './terminal/executor';
 import { find } from './terminal/dsl';
+import { responseReader } from './protocol/Response';
 
 export class MongoTerminalPlugin extends PluginBase {
     static displayName: string = 'Mongo Terminal';
@@ -9,6 +10,7 @@ export class MongoTerminalPlugin extends PluginBase {
     private database: string;
     private collection: string;
     private ws: WebSocket;
+    private requestId: string;
 
     get prefix(): string {
         if (this.database && this.collection) return `${this.database} \\ ${this.collection} `;
@@ -27,6 +29,14 @@ export class MongoTerminalPlugin extends PluginBase {
         ws.binaryType = 'arraybuffer';
         ws.onopen = () => {
             this.ws = ws;
+            ws.onmessage = ({data}) => {
+                if(data instanceof ArrayBuffer){
+                    api.printLine(`receving ${data.byteLength} bytes...`);
+                    if(this.requestId === responseReader.read(data).id){
+                        handleFindResponse({ ws: this.ws, term: this.api }, data);
+                    }
+                }
+            };
         }
     }
 
@@ -73,8 +83,8 @@ export class MongoTerminalPlugin extends PluginBase {
             }
             if (args._.length > 0) {
                 const f = find(args._);
-                print(JSON.stringify(f[0]) + ' with ' + JSON.stringify(f[1]));
-                this.createFindRequest(this.database, this.collection, f[0], f[1]);
+                print('filter ' + JSON.stringify(f[0]) + ' with ' + JSON.stringify(f[1]));
+                this.requestId = this.createFindRequest(this.database, this.collection, f[0], f[1]);
             }
         },
     });

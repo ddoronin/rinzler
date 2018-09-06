@@ -11,7 +11,7 @@ export function createFindRequest(
         collection: string, 
         find: {}, 
         options?: {}
-    }) {
+    }): string {
 
     const msg = new FindRequest();
     msg.db = req.db;
@@ -19,13 +19,14 @@ export function createFindRequest(
     msg.find = req.find;
     msg.options = req.options;
     const find$msg = findRequestCodec.write(msg);
-
     api.term.printLine(`sending ${find$msg.byteLength} bytes...`);
     api.ws.send(find$msg);
-    api.ws.onmessage = ({data}) => {
-        if(data instanceof ArrayBuffer){
-            api.term.printLine(`receving ${data.byteLength} bytes...`);
-            api.term.printLine(JSON.stringify(findResponseReader.read(data)));
-        }
-    };
+    return msg.id;
+}
+
+export function handleFindResponse(api: {
+    ws: WebSocket,
+    term: any,
+}, data: any) {
+    api.term.printLine(JSON.stringify(findResponseReader.read(data)));
 }
