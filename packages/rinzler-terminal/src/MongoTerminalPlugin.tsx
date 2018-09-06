@@ -1,39 +1,7 @@
 import React, { Component } from 'react';
 import { PluginBase } from 'terminal-in-react';
-import { Codec, proto, str, bson } from 'bytable-node';
-import { DataViewReader } from 'bytable-client/lib/DataViewReader';
-
-@proto
-class Request {
-    @str
-    id: string;
-
-    @str
-    db: string;
-
-    @str
-    collection: string;
-
-    @bson
-    find: {};
-
-    @bson
-    options: {};
-}
-
-@proto
-class Response {
-    @str
-    id: string;
-
-    @bson
-    data: {};
-}
-
-const requestCodec = new Codec(Request);
-const responseCodec = new Codec(Response);
-const reader = new DataViewReader(Request);
-const responseReader = new DataViewReader(Response);
+import { createFindRequest } from './terminal/executor';
+import { find } from './terminal/dsl';
 
 export class MongoTerminalPlugin extends PluginBase {
     static displayName: string = 'Mongo Terminal';
@@ -48,25 +16,8 @@ export class MongoTerminalPlugin extends PluginBase {
         return ' ';
     }
 
-    createRequest = (id, db, collection, find, options) => {
-        const msg = new Request();
-        msg.id = id;
-        msg.db = db;
-        msg.collection = collection;
-        msg.find = find;
-        msg.options = options;
-        const b = requestCodec.write(msg);
-        this.api.printLine(`sending ${b.byteLength} bytes...`);
-        this.ws.send(b);
-        this.ws.onmessage = ({data}) => {
-            if(data instanceof ArrayBuffer){
-                this.api.printLine(`receving ${data.byteLength} bytes...`);
-                this.api.printLine(JSON.stringify(responseReader.read(data)));
-            }
-        };
-    }
-
     constructor(private api: {
+        printLine: (s: string) => void
         setPromptPrefix: (s: string) => void
     }, config: {}) {
       super(api, config);
@@ -80,7 +31,7 @@ export class MongoTerminalPlugin extends PluginBase {
     }
 
     connect = () => ({
-        method: (args, print) => {
+        method: (args) => {
             if (args._.length > 0) {
                 this.database = args._[0];
                 this.collection = null;
@@ -93,7 +44,7 @@ export class MongoTerminalPlugin extends PluginBase {
     });
 
     use = () => ({
-        method: (args, print) => {
+        method: (args) => {
             if (args._.length > 1) {
                 this.database = args._[0];
                 this.collection = args._[1];
@@ -107,6 +58,11 @@ export class MongoTerminalPlugin extends PluginBase {
         },
     });
 
+    createFindRequest = (db: string, collection: string, find: {}, options?: {}) => createFindRequest(
+        { ws: this.ws, term: this.api }, 
+        { db, collection, find, options }
+    );
+
     find = () => ({
         method: (args, print) => {
             if (!this.database) {
@@ -116,9 +72,9 @@ export class MongoTerminalPlugin extends PluginBase {
                 return 'Please use collection:\nuse [collection name]';
             }
             if (args._.length > 0) {
-                const f = JSON.parse(args._.join(''));
-                print(JSON.stringify(f));
-                this.createRequest('123', this.database, this.collection, f, { limit: 10 });
+                const f = find(args._);
+                print(JSON.stringify(f[0]) + ' with ' + JSON.stringify(f[1]));
+                this.createFindRequest(this.database, this.collection, f[0], f[1]);
             }
         },
     });
@@ -132,6 +88,6 @@ export class MongoTerminalPlugin extends PluginBase {
     descriptions = {
         connect: 'database name',
         use: 'collection name',
-        
+        find: '[FilterQuery] [FindOneOptions?]'
     };
 }
