@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/ddoronin/rinzler/badge.svg?branch=master)](https://coveralls.io/github/ddoronin/rinzler?branch=master)
+
 # b-flow {1010}
 **binary data flow over web sockets and HTTP/2**
 

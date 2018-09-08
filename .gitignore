@@ -69,3 +69,6 @@ typings/
 
 # Apple macOS
 .DS_Store
+
+# Tokens
+.coveralls.yml
