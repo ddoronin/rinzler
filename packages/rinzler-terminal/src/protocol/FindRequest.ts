@@ -1,8 +1,9 @@
 import { Codec, proto, str, bson } from 'bytable-node';
 import uuidv4 from 'uuid/v4';
+import { FilterQuery, FindOneOptions } from 'mongodb';
 
 @proto
-export class FindRequest {
+export class FindRequest<T> {
     @str
     id: string = uuidv4();
 
@@ -13,10 +14,10 @@ export class FindRequest {
     collection: string;
 
     @bson
-    find: {};
+    find: FilterQuery<T>;
 
     @bson
-    options: {};
+    options: FindOneOptions;
 }
 
 export const findRequestCodec = new Codec(FindRequest);

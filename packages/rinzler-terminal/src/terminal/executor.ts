@@ -1,7 +1,7 @@
 import { FindRequest, findRequestCodec } from '../protocol/FindRequest';
 import { FindResponse, findResponseReader } from '../protocol/FindResponse';
 
-export function createFindRequest(
+export function createFindRequest<T>(
     api: {
         ws: WebSocket,
         term: any,
@@ -13,7 +13,7 @@ export function createFindRequest(
         options?: {}
     }): string {
 
-    const msg = new FindRequest();
+    const msg = new FindRequest<T>();
     msg.db = req.db;
     msg.collection = req.collection;
     msg.find = req.find;
