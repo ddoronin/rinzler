@@ -63,3 +63,9 @@ typings/
 
 # IntelliJ Idea
 .idea
+
+# Code coverage
+.nyc_output
+
+# Apple macOS
+.DS_Store
