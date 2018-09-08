@@ -36,8 +36,6 @@ describe('Codec', () => {
         }
 
         const binary = codec.write(request);
-        console.log(binary);
-
         expect(codec.read(binary)).to.deep.eq(request);
     });
 });
