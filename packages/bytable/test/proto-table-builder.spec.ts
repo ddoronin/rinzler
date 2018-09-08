@@ -3,6 +3,18 @@ import { build } from '../src/proto-table-builder';
 
 describe('proto-table-builder', () => {
     // TODO: cover validations!
+    it('should throw an error when no typed fields', () => {
+        expect(() => build(null)).to.throw('Typed fields cannot be null or undefined.');
+        expect(() => build(undefined)).to.throw('Typed fields cannot be null or undefined.');
+    });
+
+    it('should throw an error when typed fields are not a Map<K, V>', () => {
+        expect(() => build({} as any)).to.throw('The typed fields should be an instance of Map<string, string>');
+    });
+
+    it('should throw an error when typed fields are an empty Map<K, V>', () => {
+        expect(() => build(new Map())).to.throw('No typed fields found. Please use decorators @proto, @uint8, @string, @object, etc.');
+    });
 
     it('should handle static types', () => {
         const typedFields = new Map([

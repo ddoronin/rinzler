@@ -17,12 +17,12 @@ const validate = (typedFields: TypedFieldsMap) => {
         throw new Error('Typed fields cannot be null or undefined.');
     }
 
-    if(typeof typedFields.size === undefined) {
-        throw new TypeError('Initialization error. The typed fields should be an instance of Map<string, string>');
+    if(!(typedFields instanceof Map)) {
+        throw new TypeError('The typed fields should be an instance of Map<string, string>');
     }
 
     if(typedFields.size === 0) {
-        throw new RangeError('No fields to map found. Please use decorators @proto, @uint8, @string, @object, etc.');
+        throw new RangeError('No typed fields found. Please use decorators @proto, @uint8, @string, @object, etc.');
     }
 };
 
