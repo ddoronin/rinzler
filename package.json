@@ -10,7 +10,8 @@
   },
   "scripts": {
     "postinstall": "lerna bootstrap",
-    "build": "lerna run test",
+    "build": "lerna run pre-publish",
+    "test": "lerna run test",
     "coveralls": "lerna run coverage && ./node_modules/.bin/lcov-result-merger packages/**/lcov.info | node node_modules/.bin/coveralls",
     "start": "npm run start:client & npm run start:server &",
     "start:client": "cd ./packages/b-flow.client; npm start",
