@@ -1,5 +1,6 @@
 import { expect, assert } from 'chai';
-import { proto, uint8, uint16, uint32, bson, string, Codec } from '../src';
+import { proto, uint8, uint16, uint32, bson, string } from 'bytable';
+import { Codec } from '../src';
 
 describe('Codec', () => {
     interface IPayload {
