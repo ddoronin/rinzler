@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ddoronin/rinzler.svg?branch=master)](https://travis-ci.org/ddoronin/rinzler)
 [![Coverage Status](https://coveralls.io/repos/github/ddoronin/rinzler/badge.svg?branch=master)](https://coveralls.io/github/ddoronin/rinzler?branch=master)
 
 # b-flow {1010}
