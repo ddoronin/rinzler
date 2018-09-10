@@ -9,6 +9,9 @@ describe('byte-table-builder', () => {
     const u16_size = 2;
     const u32_size = 4;
 
+    const readAs = (m: any, type: string, start: number, size: number) => 
+        (m as any).slice(start, start + size)[`read${type}`](0);
+
     describe('fromBinary', () => {
         it('should handle statics', () => {
             // binary message
@@ -28,8 +31,7 @@ describe('byte-table-builder', () => {
             const bst = fromBinary(
                 msg, 
                 protoTable, 
-                (m, type) => (m as any)[`read${type}`](0), 
-                (_, s, e) => _.slice(s,e)
+                readAs
             );
 
             expect(bst).to.deep.eq([
@@ -63,8 +65,7 @@ describe('byte-table-builder', () => {
             const bst = fromBinary(
                 msg, 
                 protoTable, 
-                (m, type) => (m as any)[`read${type}`](0), 
-                (_, s, e) => _.slice(s,e)
+                (m, type, start, size) => (m as any).slice(start, start + size)[`read${type}`](0)
             );
 
             expect(bst).to.deep.eq([
@@ -111,8 +112,7 @@ describe('byte-table-builder', () => {
             const bst = fromBinary(
                 msg, 
                 protoTable, 
-                (m, type) => (m as any)[`read${type}`](0), 
-                (_, s, e) => _.slice(s,e)
+                readAs
             );
 
             expect(bst).to.deep.eq([

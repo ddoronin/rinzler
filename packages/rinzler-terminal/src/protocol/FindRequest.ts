@@ -1,4 +1,5 @@
-import { Codec, proto, str, bson } from 'bytable-node';
+import { proto, str, bson } from 'bytable';
+import { Codec } from 'bytable-node';
 import uuidv4 from 'uuid/v4';
 import { FilterQuery, FindOneOptions } from 'mongodb';
 

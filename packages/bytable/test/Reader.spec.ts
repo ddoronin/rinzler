@@ -5,11 +5,11 @@ import { byteMap } from '../src/types'
 
 describe('Reader', () => {
     class BufferReader<T> extends Reader<T, Buffer> {
-        readAs<TT>(msg: Buffer, type: string): TT {
+        readAs<TT>(msg: Buffer, type: string, start: number, size: number): TT {
             if(byteMap.has(type)) {
-                return (msg as any)[`read${type}`]() as any;
+                return (msg as any).slice(start, start + size)[`read${type}`]() as any;
             }
-            return msg.toString() as any;
+            return (msg as any).slice(start, start + size).toString() as any;
         }
     }
 

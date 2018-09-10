@@ -11,7 +11,7 @@ export class Codec<T> {
     }
 
     read(msg: ArrayBuffer): T {
-        return this.reader.read(msg) as any;
+        return this.reader.read(new DataView(msg)) as any;
     }
 
     write(obj: T): ArrayBuffer {

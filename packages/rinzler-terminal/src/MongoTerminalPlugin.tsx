@@ -32,7 +32,7 @@ export class MongoTerminalPlugin extends PluginBase {
             ws.onmessage = ({data}) => {
                 if(data instanceof ArrayBuffer){
                     api.printLine(`receving ${data.byteLength} bytes...`);
-                    if(this.requestId === responseReader.read(data).id){
+                    if(this.requestId === responseReader.read(new DataView(data)).id){
                         handleFindResponse({ ws: this.ws, term: this.api }, data);
                     }
                 }

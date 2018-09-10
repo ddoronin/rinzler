@@ -28,5 +28,5 @@ export function handleFindResponse(api: {
     ws: WebSocket,
     term: any,
 }, data: any) {
-    api.term.printLine(JSON.stringify(findResponseReader.read(data)));
+    api.term.printLine(JSON.stringify(findResponseReader.read(new DataView(data))));
 }

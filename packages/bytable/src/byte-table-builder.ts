@@ -3,19 +3,19 @@ import { byteMap, BINARY } from './types';
 
 const SIZE_UNKNOWN = -1;
 
+type NumberReader<T> = (m: T, type: string, start: number, size: number) => number;
+
 /**
  * Computes byte shift protocol table for static and dynamic types.
  * For dynamic types it reads size from a supplementary UInt32BE field.
  * @param { BinaryMessage } msg0 - binary message.
  * @param { ProtoTable } protoTable - protocol table.
- * @param readAsNumber - binary reader.
- * @param slice - binary slicer.
+ * @param { NumberReader } readAsNumber - binary reader.
  */
 export function fromBinary<BinaryMessage>(
     msg0: BinaryMessage,
     protoTable: ProtoTable,
-    readAsNumber: (m: BinaryMessage, type: string, size: number) => number,
-    slice: (m: BinaryMessage, start: number, end: number) => BinaryMessage
+    readAsNumber: NumberReader<BinaryMessage>,
 ): ByteShiftProtoTable {
     let shift: number = 0;
     let size_before:  number = 0;
@@ -35,8 +35,7 @@ export function fromBinary<BinaryMessage>(
                 const msg_shift = byteShift[i][3];
                 const msg_size  = byteShift[i][2];
                 const msg_type  = byteShift[i][1];
-                const msg_slice = slice(msg0, msg_shift, msg_shift + msg_size);
-                size = readAsNumber(msg_slice, msg_type, msg_size);
+                size = readAsNumber(msg0, msg_type, msg_shift, msg_size);
             }
         }
         shift += size_before;

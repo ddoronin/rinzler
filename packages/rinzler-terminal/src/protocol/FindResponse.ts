@@ -1,4 +1,4 @@
-import { Codec, proto, str, bson } from 'bytable-node';
+import { proto, str, bson } from 'bytable';
 import { DataViewReader } from 'bytable-client/lib/DataViewReader';
 import { Response } from './Response';
 
