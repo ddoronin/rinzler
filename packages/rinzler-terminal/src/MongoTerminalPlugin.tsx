@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PluginBase } from 'terminal-in-react';
 import { createFindRequest, handleFindResponse } from './terminal/executor';
 import { find } from './terminal/dsl';
-import { responseReader } from './protocol/Response';
+import { findResponseCodec } from './protocol/FindResponse';
 
 export class MongoTerminalPlugin extends PluginBase {
     static displayName: string = 'Mongo Terminal';
@@ -32,7 +32,7 @@ export class MongoTerminalPlugin extends PluginBase {
             ws.onmessage = ({data}) => {
                 if(data instanceof ArrayBuffer){
                     api.printLine(`receving ${data.byteLength} bytes...`);
-                    if(this.requestId === responseReader.read(new DataView(data)).id){
+                    if(this.requestId === findResponseCodec.read(data).id){
                         handleFindResponse({ ws: this.ws, term: this.api }, data);
                     }
                 }

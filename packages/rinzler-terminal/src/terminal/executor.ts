@@ -1,5 +1,5 @@
 import { FindRequest, findRequestCodec } from '../protocol/FindRequest';
-import { FindResponse, findResponseReader } from '../protocol/FindResponse';
+import { FindResponse, findResponseCodec } from '../protocol/FindResponse';
 
 export function createFindRequest<T>(
     api: {
@@ -28,5 +28,5 @@ export function handleFindResponse(api: {
     ws: WebSocket,
     term: any,
 }, data: any) {
-    api.term.printLine(JSON.stringify(findResponseReader.read(new DataView(data))));
+    api.term.printLine(JSON.stringify(findResponseCodec.read(data)));
 }

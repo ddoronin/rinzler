@@ -1,5 +1,5 @@
 import { proto, str, bson } from 'bytable';
-import { Codec } from 'bytable-node';
+import { Codec } from 'bytable-client';
 import uuidv4 from 'uuid/v4';
 import { FilterQuery, FindOneOptions } from 'mongodb';
 

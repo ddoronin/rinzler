@@ -1,9 +1,8 @@
 import { proto, str, bson } from 'bytable';
-import { DataViewReader } from 'bytable-client/lib/DataViewReader';
-import { Response } from './Response';
+import { Codec } from 'bytable-client';
 
 @proto
-export class FindResponse extends Response {
+export class FindResponse {
     @str
     id: string;
 
@@ -11,4 +10,4 @@ export class FindResponse extends Response {
     data: {};
 }
 
-export const findResponseReader = new DataViewReader(FindResponse);
+export const findResponseCodec = new Codec(FindResponse);
