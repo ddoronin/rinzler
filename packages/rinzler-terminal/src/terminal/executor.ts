@@ -1,5 +1,9 @@
 import { FindRequest, findRequestCodec } from '../protocol/FindRequest';
 import { FindResponse, findResponseCodec } from '../protocol/FindResponse';
+import { BSON } from 'bson';
+import { Buffer } from 'buffer';
+
+const bson = new BSON();
 
 export function createFindRequest<T>(
     api: {
@@ -28,5 +32,6 @@ export function handleFindResponse(api: {
     ws: WebSocket,
     term: any,
 }, data: any) {
-    api.term.printLine(JSON.stringify(findResponseCodec.read(data)));
+    const o = bson.deserialize(Buffer.from(data));
+    api.term.printLine(JSON.stringify(o));
 }

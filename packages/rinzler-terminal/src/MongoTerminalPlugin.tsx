@@ -3,6 +3,8 @@ import { PluginBase } from 'terminal-in-react';
 import { createFindRequest, handleFindResponse } from './terminal/executor';
 import { find } from './terminal/dsl';
 import { findResponseCodec } from './protocol/FindResponse';
+import * as pako from 'pako';
+import { Buffer } from 'buffer';
 
 export class MongoTerminalPlugin extends PluginBase {
     static displayName: string = 'Mongo Terminal';
@@ -22,22 +24,24 @@ export class MongoTerminalPlugin extends PluginBase {
         printLine: (s: string) => void
         setPromptPrefix: (s: string) => void
     }, config: {}) {
-      super(api, config);
-      api.setPromptPrefix(this.prefix);
-
-      const ws = new WebSocket('ws://localhost:8080/');
+        super(api, config);
+        api.setPromptPrefix(this.prefix);
+        const ws = new WebSocket('ws://localhost:8080/');
         ws.binaryType = 'arraybuffer';
         ws.onopen = () => {
             this.ws = ws;
             ws.onmessage = ({data}) => {
                 if(data instanceof ArrayBuffer){
                     api.printLine(`receving ${data.byteLength} bytes...`);
-                    if(this.requestId === findResponseCodec.read(data).id){
-                        handleFindResponse({ ws: this.ws, term: this.api }, data);
+                    const resp = findResponseCodec.read(data);
+                    if(this.requestId === resp.id){
+                        api.printLine(`data ${resp.data.byteLength} bytes`);
+                        let d = pako.ungzip(resp.data).buffer;
+                        handleFindResponse({ ws: this.ws, term: this.api }, d);
                     }
                 }
             };
-        }
+        };
     }
 
     connect = () => ({

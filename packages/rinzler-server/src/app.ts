@@ -5,6 +5,7 @@ import { proto, str, bson, binary } from 'bytable';
 import { Codec } from 'bytable-node';
 import { MongoClient } from 'mongodb';
 import { Server } from 'ws';
+import * as zlib from 'zlib';
 
 @proto
 class Request {
@@ -61,10 +62,10 @@ export class App {
             while (null !== (chunk = cursor.read())) {
                 const resp = new Response();
                 resp.id = req.id;
-                resp.data = chunk;
-                const b = self.responseCodec.write(resp);
-                console.log(chalk.green(`> sending ${b.byteLength} bytes`));
-                (ws as any).send(b, { binary: true });
+                resp.data = zlib.gzipSync(chunk);
+                const buf = self.responseCodec.write(resp);
+                console.log(chalk.green(`> sending ${buf.byteLength} bytes`));
+                (ws as any).send(buf, { binary: true });
             }
         });
     }
