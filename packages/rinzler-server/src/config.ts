@@ -5,7 +5,5 @@ export const server = {
 };
 
 export const mongo = {
-    url: process.env.MONGO_URL || 'mongodb://localhost:27017',
-    db: process.env.MONGO_DB || 'test',
-    collection: 'zips'
+    url: process.env.MONGO_URL || 'mongodb://localhost:27017'
 };

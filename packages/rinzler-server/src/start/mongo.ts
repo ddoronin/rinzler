@@ -1,20 +1,19 @@
 'use strict';
 
-import chalk from 'chalk';
 import { MongoClient } from 'mongodb';
+import { yorker } from 'yorker';
 
-export function startMongo(config: {url: string}): Promise<MongoClient> {
-    console.info(chalk.yellow('Starting Mongo'));
-    return new Promise((resolve, reject) => {
-        console.info(`Connecting to mongo: "${config.url}"`);
+export async function startMongo(config: { url: string }) {
+    return new Promise<MongoClient>((resolve, reject) => {
+        const say = yorker.sees(`🚂 Connecting to mongo: "${config.url}"`);
         const client = new MongoClient(config.url, { raw: true, useNewUrlParser: true });
         client.connect((err, client) => {
-            if(err) {
-                console.error('Error while connecting to mongo', err);
+            if (err) {
+                say('Run mongod --config /usr/local/etc/mongod.conf', err);
                 reject(err);
                 return process.exit(1);
             }
-            console.info('Connection to mongo succeeded');
+            say('Connection to mongo succeeded.');
             resolve(client);
         });
     });
