@@ -6,4 +6,4 @@ RUN npm install
 COPY . .
 EXPOSE 8080
 EXPOSE 27017
-CMD ./run.sh
+CMD ["./run.sh"]
