@@ -1,5 +1,5 @@
 import { proto, str, bson } from 'bytable';
-import { REQUEST_TYPE } from  './common';
+import { Codec } from 'bytable-node';
 import { TReq } from './TReq';
 
 // DB List
@@ -13,3 +13,6 @@ export class DBList {
     @bson
     list: {};
 }
+
+export const dbListReqC = new Codec(DBListReq);
+export const dbListC = new Codec(DBList);

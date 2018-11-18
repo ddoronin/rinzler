@@ -1,6 +1,6 @@
 import { proto, str, bson, binary } from 'bytable';
+import { Codec } from 'bytable-node';
 import { REQUEST_TYPE } from  './common';
-import { TReq } from './TReq';
 
 // Find in collection
 @proto
@@ -32,3 +32,6 @@ export class Found {
     @binary
     data: {};
 }
+
+export const findReqC = new Codec(FindReq);
+export const foundC = new Codec(Found);

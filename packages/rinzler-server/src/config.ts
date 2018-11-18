@@ -1,5 +1,3 @@
-'use strict';
-
 export const server = {
     port: (process.env.PORT as any) || 8080
 };

@@ -1,5 +1,3 @@
-'use strict';
-
 import { mongo, server } from './config';
 import { startMongo }    from './start/mongo';
 import { startWss }      from './start/wss';
