@@ -34,6 +34,8 @@ MongoDB is a perfect example, because internally it's relying on BSON, every doc
 
 ## Workflow
 
+
+
 ```
 ┌─────────┐ REQUEST ┌─────────┐ QUERY   ┌─────────┐
 │ BROWSER │ ~~~~~~> │ SERVER  │ ~~~~~~> │  MONGO  │
@@ -119,4 +121,8 @@ bf({ find: { id: 42 }, fields: { id: 1, name: 1 } })
 ```
 
 
-### To be continued...
+### How to run Docker locally
+```
+docker build . -t doronin/rinzler
+docker run -it -p 8080:8080 -p 27017:27017 --env-file env.list doronin/rinzler
+```
