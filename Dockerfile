@@ -1,11 +1,10 @@
 FROM mhart/alpine-node:10
-RUN apk add --no-cache make gcc g++ python
+RUN apk add --no-cache make gcc g++ python \
+    && npm i lerna -g
 WORKDIR /app
-COPY package*.json ./
-RUN npm install \
-    && lerna bootstrap
 COPY . .
-EXPOSE 8080 27017
-CMD (cd ./packages/rinzler-vue && npm run build && cp -r dist/* ../rinzler/public) \
-    && npm run start:rinzler & \
-    && npm run start:rinzler-server
+RUN npm i \
+    && (cd packages/rinzler-vue && npm i && npm rebuild node-sass && npm run build) \
+    && (cd packages/rinzler-server && npm i)
+EXPOSE 80 8080 27017
+CMD npm run start:rinzler & npm run start:rinzler-server

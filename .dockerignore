@@ -1,4 +1,4 @@
-node_modules
+node_modules/*
 .dockerignore
 Dockerfile
 npm-debug.log
@@ -6,3 +6,8 @@ npm-debug.log
 .hg
 .svn
 dist
+.coveralls.yml
+.gitignore
+.idea
+.travis.yml
+env.list

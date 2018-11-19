@@ -1,5 +1,5 @@
 export const server = {
-    port: (process.env.PORT as any) || 8080
+    port: (process.env.PORT_WSS as any) || 8080
 };
 
 export const mongo = {

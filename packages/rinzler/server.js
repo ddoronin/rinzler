@@ -1,4 +1,4 @@
-const port = process.env.PORT || 8080;
+const port = process.env.PORT_STATIC || 8080;
 
 var express = require('express')
 var path = require('path')

@@ -72,3 +72,6 @@ typings/
 
 # Tokens
 .coveralls.yml
+
+dist/
+public/

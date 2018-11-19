@@ -1,4 +1,4 @@
-import { webSocket } from 'rxjs/websocket';
+import { webSocket } from 'rxjs/webSocket';
 
 const subject = webSocket({
     url: 'ws://localhost:8080', 
