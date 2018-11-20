@@ -3,13 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "description": "Binary Data Flow Over Web Sockets",
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "coveralls": "^3.0.2",
     "lcov-result-merger": "^3.1.0",
     "lerna": "^3.1.0"
   },
   "scripts": {
-    "postinstall": "lerna bootstrap",
     "build": "lerna run pre-publish",
     "test": "lerna run test",
     "coveralls": "lerna run coverage && ./node_modules/.bin/lcov-result-merger packages/**/lcov.info | node node_modules/.bin/coveralls",
