@@ -32,6 +32,8 @@ bower_components
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 lib/
+dist/
+public/
 
 # Dependency directories
 node_modules/
@@ -72,6 +74,3 @@ typings/
 
 # Tokens
 .coveralls.yml
-
-dist/
-public/
