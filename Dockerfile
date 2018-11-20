@@ -3,8 +3,7 @@ RUN apk add --no-cache make gcc g++ python \
     && npm i lerna -g
 WORKDIR /app
 COPY . .
-RUN npm i \
-    && (cd packages/rinzler-vue && npm i && npm rebuild node-sass && npm run build) \
-    && (cd packages/rinzler-server && npm i)
+RUN yarn \
+    && (cd packages/rinzler-vue && yarn build)
 EXPOSE 80 8080 27017
-CMD npm run start:rinzler & npm run start:rinzler-server
+CMD yarn start:rinzler & yarn start:rinzler-server
