@@ -11,3 +11,4 @@ dist
 .idea
 .travis.yml
 env.list
+.DS_Store
