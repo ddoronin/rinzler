@@ -123,6 +123,7 @@ bf({ find: { id: 42 }, fields: { id: 1, name: 1 } })
 
 ### How to run Docker locally
 ```
-docker build . -t doronin/rinzler
-docker run -it -p 8080:8080 -p 27017:27017 --env-file env.list doronin/rinzler
+docker pull
+docker build . -t ddoronin/rinzler
+docker run --rm -it -p 8080:8080 -p 27017:27017 -p 80:80 -e MONGO_URL=mongodb://host.docker.internal:27017 ddoronin/rinzler
 ```
