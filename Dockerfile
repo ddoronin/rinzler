@@ -3,15 +3,18 @@ RUN apk add --no-cache make gcc g++ python \
     && npm i lerna -g
 WORKDIR /app
 COPY . .
-RUN yarn \
+RUN yarn install \
     && (cd packages/rinzler-vue && yarn build) \
-    && cp -r packages/rinzler-vue/dist packages/rinzler/public \
+    && mv packages/rinzler-vue/dist/* packages/rinzler-server/www \
     && rm -rf node_modules \
     && rm -rf packages/rinzler-vue \
-    && yarn install --production=true
+    && yarn install
 
 FROM mhart/alpine-node:10
 WORKDIR /app
 COPY --from=0 /app .
-EXPOSE 80 8080 27017
-CMD yarn start:rinzler & yarn start:rinzler-server
+ENV TS_NODE_TRANSPILE_ONLY=true \
+    PORT=80 \
+    MONGO_URL=mongodb://host.docker.internal:27017
+EXPOSE 80 27017
+CMD yarn start

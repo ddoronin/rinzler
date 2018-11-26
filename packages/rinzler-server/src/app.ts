@@ -33,7 +33,6 @@ export class App {
     start() {
         yorker.see('Starting App');
         this.wss.on('connection', (ws) => {
-            
             this.connectionsCount++;
             const say = yorker.see(`[+] ${this.connectionsCount} open connection(s)`);
             ws.on('message', (buf) => {

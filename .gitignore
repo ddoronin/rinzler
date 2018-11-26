@@ -34,6 +34,7 @@ build/Release
 lib/
 dist/
 public/
+www/
 
 # Dependency directories
 node_modules/

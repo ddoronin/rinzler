@@ -15,10 +15,7 @@
     "build": "lerna run pre-publish",
     "test": "lerna run test",
     "coveralls": "lerna run coverage && ./node_modules/.bin/lcov-result-merger packages/**/lcov.info | node node_modules/.bin/coveralls",
-    "start": "npm run start:client & npm run start:server &",
-    "start:rinzler": "cd ./packages/rinzler; npm start",
-    "start:rinzler-server": "cd ./packages/rinzler-server; npm start",
-    "docker": "cd ./packages/rinzler-vue && npm run build && cp -r dist/* ../rinzler/public"
+    "start": "cd ./packages/rinzler-server && yarn start"
   },
   "repository": {
     "type": "git",

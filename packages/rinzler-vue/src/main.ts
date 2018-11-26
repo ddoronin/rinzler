@@ -3,11 +3,12 @@ import App from "./App.vue";
 import router from "./router";
 import { store } from "./store";
 
+import Antd from 'ant-design-vue';
+import './main.less'
+
 Vue.config.productionTip = false
 
-import Ant from 'ant-design-vue';
-
-Vue.use(Ant as any);
+Vue.use(Antd as any);
 
 new Vue({
   router,

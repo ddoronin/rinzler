@@ -121,9 +121,28 @@ bf({ find: { id: 42 }, fields: { id: 1, name: 1 } })
 ```
 
 
-### How to run Docker locally
+### Docker
+
+Checkout the repository and build docker locally:
 ```
-docker pull
 docker build . -t ddoronin/rinzler
-docker run --rm -it -p 8080:8080 -p 27017:27017 -p 80:80 -e MONGO_URL=mongodb://host.docker.internal:27017 ddoronin/rinzler
 ```
+
+Or pull the latest version from docker hub:
+```
+docker pull ddoronin/rinzler
+```
+
+And run it using the command:
+```
+docker run --rm -it -p 80:80 -p 27017:27017 ddoronin/rinzler
+```
+where port 80 is used to serve a web server and 27017 is a default port for mongo.
+
+These parameters could be customized using environment variables:
+
+- PORT=80
+
+- MONGO_URL=mongodb://host.docker.internal:27017
+
+By default `MONGO_URL` is pointing to a mongo running on the host. In production environment this should be mongo connection string. It's recommended to keep docker ports as is, but change mapped ports if needed.

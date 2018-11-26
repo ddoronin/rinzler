@@ -23,6 +23,5 @@ export class ColList {
     list: {};
 }
 
-
 export const colsReqC = new Codec(ColListReq);
 export const colsC = new Codec(ColList);
