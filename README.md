@@ -1,11 +1,15 @@
 [![Build Status](https://travis-ci.org/ddoronin/rinzler.svg?branch=master)](https://travis-ci.org/ddoronin/rinzler)
-[![Coverage Status](https://coveralls.io/repos/github/ddoronin/rinzler/badge.svg?branch=master)](https://coveralls.io/github/ddoronin/rinzler?branch=master)
 
-# b-flow {1010}
-**binary data flow over web sockets and HTTP/2**
+# Rinzler 
+
+Binary over websockets:
 
 ```
-npm install b-flow
+docker pull ddoronin/rinzler
+```
+If you have a local instance of MongoDB up and running on `27017` (by default) you can use this command to run docker on `http://localhost:8080`:
+```
+docker run --rm -it -p 8080:80 -p 27017:27017
 ```
 
 ## Motivation
@@ -13,7 +17,7 @@ Today in the World of Big Data and IoT one of the key challenges is how to store
 
 Traditionally back-end was required to parse database data (BSON for mongo), transform it into Java/C#/JavaScript or any other language objects in memory, than serialize in JSON and send it to a web browser over HTTP. All these layers of parsing, transformations and serializations take time and computational resources.
 
-With `b-flow` it's not a case any more! Grab BSON and pass it throught as is!
+With `rinzler` it's not a case any more! Grab BSON and pass it throught as is!
 
 ## Proposition
 
@@ -33,8 +37,6 @@ https://www.mongodb.com/blog/post/bson
 MongoDB is a perfect example, because internally it's relying on BSON, every document is stored as BSON and can be passed throught in this raw binary format.
 
 ## Workflow
-
-
 
 ```
 ┌─────────┐ REQUEST ┌─────────┐ QUERY   ┌─────────┐
@@ -63,9 +65,11 @@ MongoDB is a perfect example, because internally it's relying on BSON, every doc
 
 Today web browsers are able to handle binary data effeciently with Typed Arrays, Buffers and WASM.
 
-`b-flow` is demonstrating two-way client-server communication over web sockets using BSON without additional layers of translation between JSON, BSON and back-end objects.
+`rinzler` is demonstrating two-way client-server communication over web sockets using BSON without additional layers of translation between JSON, BSON and back-end objects.
 
 ## Protocol
+
+See bytable
 
 ### Client
 
@@ -98,32 +102,10 @@ Today web browsers are able to handle binary data effeciently with Typed Arrays,
 
 x0011 = x0001 | x0010
 
-## Client API
 
-```typescript
-import bf from 'b-flow';
+## Docker
 
-bf({ find: { id: 42 }, fields: { id: 1, name: 1 } })
-    .on('document', (doc, index) => 
-        console.log(`${index} ${doc.id} - ${doc.name}`)
-    )
-    .forEach((doc, index) => 
-        console.log(`${index} ${doc.id} - ${doc.name}`)
-    )
-    .on('complete', (done) => 
-        console.log('done')
-    )
-    .completed((done) => 
-        console.log('done')
-    )
-    .then(done => ..., error => ...);
-
-```
-
-
-### Docker
-
-Checkout the repository and build docker locally:
+You can checkout the repo and build docker locally:
 ```
 docker build . -t ddoronin/rinzler
 ```
@@ -142,7 +124,7 @@ where port 80 is used to serve a web server and 27017 is a default port for mong
 These parameters could be customized using environment variables:
 
 - PORT=80
-
 - MONGO_URL=mongodb://host.docker.internal:27017
 
 By default `MONGO_URL` is pointing to a mongo running on the host. In production environment this should be mongo connection string. It's recommended to keep docker ports as is, but change mapped ports if needed.
+
