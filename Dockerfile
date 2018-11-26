@@ -3,9 +3,10 @@ RUN apk add --no-cache make gcc g++ python \
     && npm i lerna -g
 WORKDIR /app
 COPY . .
-RUN yarn install \
-    && (cd packages/rinzler-vue && yarn build) \
-    && mv packages/rinzler-vue/dist/* packages/rinzler-server/www \
+RUN yarn install
+RUN (cd packages/rinzler-vue && yarn build) \
+    && mkdir packages/rinzler-server/www \
+    && cp -r packages/rinzler-vue/dist/* packages/rinzler-server/www \
     && rm -rf node_modules \
     && rm -rf packages/rinzler-vue \
     && yarn install
