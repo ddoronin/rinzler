@@ -1,8 +1,8 @@
 <template>
     <article class="terminal">
-        <vue-json-pretty 
-            :style="{fontSize: 'small'}"
-            :data="getTop10({db, collection})"/>
+        <a-table 
+            :columns="getColumns()" 
+            :data-source="getData()"/>
     </article>
 </template>
 
@@ -11,23 +11,37 @@
     import Component from 'vue-class-component';
     import { State, Action, namespace } from 'vuex-class';
     import { Prop } from 'vue-property-decorator';
-    import VueJsonPretty from 'vue-json-pretty'
 
     const collections = namespace('terminal');
 
-    type top10Params = {db: string, collection: string};
+    type top100Params = {db: string, collection: string};
 
     @Component({
-        components: {VueJsonPretty}
+        components: {
+        }
     })
     export default class Terminal extends Vue {
         @Prop() db!: string;
         @Prop() collection!: string;
-        @collections.Action('top10') top10!: (params: top10Params) => void;
-        @collections.Getter('getTop10') getTop10!: (params: top10Params) => any[];
+        @collections.Action('top100') top100!: (params: top100Params) => void;
+        @collections.Getter('getTop100') getTop100!: (params: top100Params) => any[];
+
+        getColumns() {
+            const data = this.getData()
+            if (!data || data.length === 0) return [];
+            const [head] = data;
+            return Object.keys(head).map(dataIndex => ({
+                title: dataIndex, 
+                dataIndex
+            }));
+        }
+
+        getData() {
+            return this.getTop100({db: this.db, collection: this.collection});
+        }
 
         mounted() {
-            this.top10({db: this.db, collection: this.collection});
+            this.top100({db: this.db, collection: this.collection});
         }
     }
 </script>
