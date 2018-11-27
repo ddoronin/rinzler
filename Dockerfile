@@ -17,11 +17,13 @@ RUN mkdir packages/rinzler-server/www \
     && rm -rf packages/rinzler-server/src \
     && yarn install --prod
 
-FROM mhart/alpine-node:10
+FROM alpine:3.7
+COPY --from=0 /usr/bin/node /usr/bin/npm /usr/bin/
+COPY --from=0 /usr/lib/libgcc* /usr/lib/libstdc* /usr/lib/
+COPY --from=0 /app /app
 WORKDIR /app
-COPY --from=0 /app .
 ENV TS_NODE_TRANSPILE_ONLY=true \
     PORT=80 \
     MONGO_URL=mongodb://host.docker.internal:27017
 EXPOSE 80 27017
-CMD yarn start
+CMD cd ./packages/rinzler-server && node ./dist/server.js
