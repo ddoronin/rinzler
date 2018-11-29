@@ -28,7 +28,7 @@ export const terminal: Module<TerminalState, RootState> = {
             api.next(req.write());
             api
                 .pipe(filter(({data}) => Response.read(data).id === req.id))
-                .subscribe(({data}) => context.commit('append', {db, collection, item: Found.read(data).data}));
+                .subscribe(({data}) => setTimeout(() => context.commit('append', {db, collection, item: Found.read(data).data}), 0));
         }
     },
     mutations: {

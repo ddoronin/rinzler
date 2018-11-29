@@ -7,7 +7,7 @@
     "start": "node ./dist/server.js",
     "compile": "tsc --outDir dist",
     "cp": "(cd ../../ && rm -rf packages/rinzler-server/www/ && cp -r packages/rinzler-vue/dist/ packages/rinzler-server/www)",
-    "dev": "yarn cp && ts-node ./src/server.ts"
+    "dev": "ts-node ./src/server.ts"
   },
   "repository": {
     "type": "git",

@@ -17,9 +17,7 @@ RUN mkdir packages/rinzler-server/www \
     && rm -rf packages/rinzler-server/src \
     && yarn install --prod
 
-FROM alpine:3.7
-COPY --from=0 /usr/bin/node /usr/bin/npm /usr/bin/
-COPY --from=0 /usr/lib/libgcc* /usr/lib/libstdc* /usr/lib/
+FROM mhart/alpine-node:10
 COPY --from=0 /app /app
 WORKDIR /app
 ENV TS_NODE_TRANSPILE_ONLY=true \

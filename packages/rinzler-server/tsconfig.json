@@ -5,7 +5,7 @@
         "removeComments": false,
         "alwaysStrict": true,
         "module": "commonjs",
-        "target": "es6",
+        "target": "es2017",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": false,
         "lib": [
@@ -13,7 +13,8 @@
             "es7",
             "es6",
             "es2015.symbol",
-            "es2015.symbol.wellknown"
+            "es2015.symbol.wellknown",
+            "es2017"
         ],
         "types": [
             "node"
